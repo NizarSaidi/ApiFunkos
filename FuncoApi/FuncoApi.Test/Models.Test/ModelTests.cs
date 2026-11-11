@@ -2,8 +2,10 @@ using FuncoApi.Models;
 
 namespace FuncoApi.Test.Models.Test;
 
+/// <summary>Comprueba la asignación y los valores iniciales de los modelos de dominio.</summary>
 public class ModelTests
 {
+    /// <summary>Comprueba que se pueden asignar y leer los datos de una categoría.</summary>
     [Fact]
     public void Categoria_ShouldAllowSettingAndReadingValues()
     {
@@ -17,6 +19,7 @@ public class ModelTests
         Assert.Equal("Anime", categoria.Nombre);
     }
 
+    /// <summary>Comprueba que se pueden asignar y leer los datos de un proveedor.</summary>
     [Fact]
     public void Proveedor_ShouldAllowSettingAndReadingValues()
     {
@@ -30,6 +33,7 @@ public class ModelTests
         Assert.Equal("Funko", proveedor.Nombre);
     }
 
+    /// <summary>Comprueba el identificador predeterminado y el nombre inicial de un rol.</summary>
     [Fact]
     public void Rol_ShouldHaveDefaultEmptyStringForNombre()
     {
@@ -39,6 +43,7 @@ public class ModelTests
         Assert.Equal(string.Empty, rol.Nombre);
     }
 
+    /// <summary>Comprueba las propiedades del usuario y sus valores iniciales.</summary>
     [Fact]
     public void User_ShouldHaveExpectedPropertiesAndDefaultValues()
     {
@@ -65,4 +70,3 @@ public class ModelTests
         Assert.Equal(0, emptyUser.RolId);
     }
 }
-

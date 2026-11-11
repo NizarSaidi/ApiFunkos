@@ -4,8 +4,10 @@ using Moq;
 
 namespace FuncoApi.Test.Repositories.Test;
 
+/// <summary>Comprueba el CRUD relacional y el borrado lógico del repositorio de Funkos.</summary>
 public class FunkoRepositoryTests
 {
+    /// <summary>Comprueba que al crear se asigna un ID y se inicializan las marcas de tiempo.</summary>
     [Fact]
     public async Task CreateAsync_GeneratesIdAndSavesFunko()
     {
@@ -29,6 +31,7 @@ public class FunkoRepositoryTests
         context.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    /// <summary>Comprueba que una nueva entidad recibe un ID posterior a los ya existentes.</summary>
     [Fact]
     public async Task CreateAsync_GeneratesNextId_WhenSeveralItemsAlreadyExist()
     {
@@ -53,6 +56,7 @@ public class FunkoRepositoryTests
         context.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    /// <summary>Comprueba que el listado excluye entidades con borrado lógico.</summary>
     [Fact]
     public async Task GetAllAsync_ExcludesSoftDeletedFunkos()
     {
@@ -72,6 +76,7 @@ public class FunkoRepositoryTests
         Assert.Equal("Visible", result[0].Nombre);
     }
 
+    /// <summary>Comprueba el borrado lógico, la ocultación posterior y el comportamiento para IDs ausentes.</summary>
     [Fact]
     public async Task DeleteAsync_SoftDeletesFunkoAndReturnsNullWhenMissingOrAlreadyDeleted()
     {
@@ -96,6 +101,7 @@ public class FunkoRepositoryTests
         context.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    /// <summary>Comprueba la actualización de campos editables sin alterar el estado de borrado.</summary>
     [Fact]
     public async Task UpdateAsync_UpdatesEditableFieldsWithoutChangingSoftDeleteState()
     {
@@ -134,6 +140,7 @@ public class FunkoRepositoryTests
         context.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    /// <summary>Comprueba que se devuelve la entidad activa encontrada por identificador.</summary>
     [Fact]
     public async Task GetByIdAsync_ReturnsFunko_WhenExists()
     {
@@ -152,6 +159,7 @@ public class FunkoRepositoryTests
         Assert.Equal("Visible", result.Nombre);
     }
 
+    /// <summary>Comprueba que la búsqueda por un ID desconocido devuelve nulo.</summary>
     [Fact]
     public async Task GetByIdAsync_ReturnsNullForUnknownId()
     {
@@ -163,6 +171,7 @@ public class FunkoRepositoryTests
         Assert.Null(await repository.GetByIdAsync(123));
     }
 
+    /// <summary>Construye una entidad de Funko con datos base para las pruebas.</summary>
     private static FunkoEntity CreateFunko(string nombre = "Funko")
     {
         return new FunkoEntity
@@ -176,6 +185,7 @@ public class FunkoRepositoryTests
         };
     }
 
+    /// <summary>Construye una entidad de Funko con el identificador especificado.</summary>
     private static FunkoEntity CreateFunkoWithId(int id)
     {
         var funko = CreateFunko();

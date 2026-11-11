@@ -4,8 +4,10 @@ using Moq;
 
 namespace FuncoApi.Test.Repositories.Test;
 
+/// <summary>Comprueba las operaciones CRUD de categorías usando un contexto EF Core simulado.</summary>
 public class CategoriaRepositoryTests
 {
+    /// <summary>Comprueba que la creación agrega la categoría y persiste los cambios.</summary>
     [Fact]
     public async Task CreateAsync_AddsCategoriaToDbSet()
     {
@@ -24,6 +26,7 @@ public class CategoriaRepositoryTests
         context.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    /// <summary>Comprueba que el listado devuelve todas las categorías configuradas.</summary>
     [Fact]
     public async Task GetAllAsync_ReturnsAllCategorias()
     {
@@ -44,6 +47,7 @@ public class CategoriaRepositoryTests
         Assert.Contains(result, item => item.Id == "serie");
     }
 
+    /// <summary>Comprueba que la búsqueda devuelve la categoría existente.</summary>
     [Fact]
     public async Task GetByIdAsync_ReturnsCategoria_WhenExists()
     {
@@ -63,6 +67,7 @@ public class CategoriaRepositoryTests
         Assert.Equal("Anime", result.Nombre);
     }
 
+    /// <summary>Comprueba que la actualización cambia el nombre de una categoría existente.</summary>
     [Fact]
     public async Task UpdateAsync_UpdatesExistingCategoria()
     {
@@ -83,6 +88,7 @@ public class CategoriaRepositoryTests
         context.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    /// <summary>Comprueba que la actualización de una categoría inexistente devuelve nulo.</summary>
     [Fact]
     public async Task UpdateAsync_ReturnsNull_WhenCategoriaDoesNotExist()
     {
@@ -97,6 +103,7 @@ public class CategoriaRepositoryTests
         Assert.Null(updated);
     }
 
+    /// <summary>Comprueba que la eliminación remueve la categoría y persiste el cambio.</summary>
     [Fact]
     public async Task DeleteAsync_RemovesCategoria_WhenExists()
     {
@@ -118,6 +125,7 @@ public class CategoriaRepositoryTests
         context.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    /// <summary>Comprueba que la eliminación de una categoría inexistente devuelve nulo.</summary>
     [Fact]
     public async Task DeleteAsync_ReturnsNull_WhenCategoriaDoesNotExist()
     {

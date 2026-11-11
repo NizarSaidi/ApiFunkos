@@ -53,6 +53,14 @@
           }
         }
       },
+      "CSharpFunctionalExtensions/3.7.0": {
+        "runtime": {
+          "lib/net8.0/CSharpFunctionalExtensions.dll": {
+            "assemblyVersion": "3.7.0.0",
+            "fileVersion": "3.7.0.0"
+          }
+        }
+      },
       "DnsClient/1.6.1": {
         "runtime": {
           "lib/net5.0/DnsClient.dll": {
@@ -772,6 +780,7 @@
       },
       "FuncoApi/1.0.0": {
         "dependencies": {
+          "CSharpFunctionalExtensions": "3.7.0",
           "Microsoft.AspNetCore.OpenApi": "10.0.1",
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.1",
           "MongoDB.Driver": "3.13.0"
@@ -811,6 +820,13 @@
       "sha512": "sha512-wHARzQA695jwwKreOzNsq54KiGqKP38tv8hi8e2FXDEC/sA6BtrX90tVPDkOfVu13PbEzr00TCV8coikl+D1Iw==",
       "path": "castle.core/5.2.1",
       "hashPath": "castle.core.5.2.1.nupkg.sha512"
+    },
+    "CSharpFunctionalExtensions/3.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eMZp8tc88O96eEFutiIskF3LE8lFY3fjbNRGfNa1ca0CD9sB8A00r5ltyYDih/7UFdJdVbhVq7tGeHI8xj6DlQ==",
+      "path": "csharpfunctionalextensions/3.7.0",
+      "hashPath": "csharpfunctionalextensions.3.7.0.nupkg.sha512"
     },
     "DnsClient/1.6.1": {
       "type": "package",

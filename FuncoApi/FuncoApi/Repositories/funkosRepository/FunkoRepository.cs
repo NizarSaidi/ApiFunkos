@@ -4,15 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FuncoApi.Repositories;
 
+/// <summary>Implementa el acceso EF Core a Funkos y su borrado lógico.</summary>
 public class FunkoRepository : IFunkoRepository
 {
     private readonly FuncoDbContext _context;
 
+    /// <summary>Crea el repositorio para el contexto relacional indicado.</summary>
     public FunkoRepository(FuncoDbContext context) : base()
     {
         _context = context;
     }
     
+    /// <inheritdoc />
     public async Task<IReadOnlyList<FunkoEntity>> GetAllAsync()
     {
         return await _context.Funkos
@@ -21,6 +24,7 @@ public class FunkoRepository : IFunkoRepository
             .ToListAsync();
     }
 
+    /// <inheritdoc />
     public Task<FunkoEntity?> GetByIdAsync(int id)
     {
         return _context.Funkos
@@ -28,6 +32,16 @@ public class FunkoRepository : IFunkoRepository
             .FirstOrDefaultAsync(funko => funko.Id == id && !funko.IsDeleted);
     }
 
+    /// <inheritdoc />
+    public Task<bool> ExistsByNameAsync(string name, int? excludedId = null)
+    {
+        return _context.Funkos.AnyAsync(funko =>
+            !funko.IsDeleted &&
+            funko.Nombre == name &&
+            (!excludedId.HasValue || funko.Id != excludedId.Value));
+    }
+
+    /// <inheritdoc />
     public async Task<FunkoEntity?> CreateAsync(FunkoEntity obj)
     {
         obj.Id = 0;
@@ -41,6 +55,8 @@ public class FunkoRepository : IFunkoRepository
         return obj;
     }
 
+    /// <summary>Marca un Funko activo como eliminado y actualiza sus marcas de tiempo.</summary>
+    /// <inheritdoc />
     public async Task<FunkoEntity?> DeleteAsync(int id)
     {
         var funko = await _context.Funkos
@@ -58,6 +74,7 @@ public class FunkoRepository : IFunkoRepository
         return funko;
     }
 
+    /// <inheritdoc />
     public async Task<FunkoEntity?> UpdateAsync(FunkoEntity obj)
     {
         var funko = await _context.Funkos

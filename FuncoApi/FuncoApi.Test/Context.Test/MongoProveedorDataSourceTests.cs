@@ -5,12 +5,14 @@ using Mongo2Go;
 
 namespace FuncoApi.Test.Context.Test;
 
+/// <summary>Pruebas de integración del CRUD de proveedores contra una instancia MongoDB temporal.</summary>
 public class MongoProveedorDataSourceTests : IAsyncLifetime
 {
     private MongoDbRunner _runner = null!;
     private MongoDbContext _context = null!;
     private MongoProveedorDataSource _dataSource = null!;
 
+    /// <summary>Inicia Mongo2Go, configura el contexto y deja vacía la colección de prueba.</summary>
     public async Task InitializeAsync()
     {
         _runner = MongoDbRunner.Start(singleNodeReplSet: false);
@@ -29,12 +31,14 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
         await _context.Proveedores.Database.DropCollectionAsync("proveedores");
     }
 
+    /// <summary>Detiene la instancia MongoDB temporal al finalizar las pruebas.</summary>
     public Task DisposeAsync()
     {
         _runner.Dispose();
         return Task.CompletedTask;
     }
 
+    /// <summary>Comprueba que la consulta devuelve todos los proveedores almacenados.</summary>
     [Fact]
     public async Task GetAllAsync_Returns_All_Proveedores()
     {
@@ -51,6 +55,7 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
         Assert.Contains(result, p => p.Id == 2 && p.Nombre == "Proveedor B");
     }
 
+    /// <summary>Comprueba que la consulta por ID devuelve el proveedor existente.</summary>
     [Fact]
     public async Task GetByIdAsync_Returns_Proveedor_When_Exists()
     {
@@ -64,6 +69,7 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
         Assert.Equal("Proveedor X", result.Nombre);
     }
 
+    /// <summary>Comprueba que la consulta por un ID desconocido devuelve nulo.</summary>
     [Fact]
     public async Task GetByIdAsync_Returns_Null_When_Not_Found()
     {
@@ -72,6 +78,7 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
         Assert.Null(result);
     }
 
+    /// <summary>Comprueba que crear un proveedor lo inserta y lo devuelve.</summary>
     [Fact]
     public async Task CreateAsync_Inserts_Proveedor_And_Returns_It()
     {
@@ -85,6 +92,7 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
         Assert.NotNull(await _dataSource.GetByIdAsync(7));
     }
 
+    /// <summary>Comprueba que borrar un proveedor devuelve el documento y lo elimina de MongoDB.</summary>
     [Fact]
     public async Task DeleteAsync_Returns_Proveedor_When_Exists()
     {
@@ -98,6 +106,7 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
         Assert.Null(await _dataSource.GetByIdAsync(3));
     }
 
+    /// <summary>Comprueba que borrar un proveedor inexistente devuelve nulo.</summary>
     [Fact]
     public async Task DeleteAsync_Returns_Null_When_Not_Found()
     {
@@ -106,6 +115,7 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
         Assert.Null(result);
     }
 
+    /// <summary>Comprueba que actualizar un proveedor existente reemplaza sus datos.</summary>
     [Fact]
     public async Task UpdateAsync_Updates_Existing_Proveedor()
     {
@@ -121,6 +131,7 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
         Assert.Equal("Nuevo", stored!.Nombre);
     }
 
+    /// <summary>Comprueba que actualizar un proveedor inexistente devuelve nulo.</summary>
     [Fact]
     public async Task UpdateAsync_Returns_Null_When_Not_Found()
     {

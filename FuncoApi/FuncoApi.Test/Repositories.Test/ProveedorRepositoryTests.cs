@@ -6,16 +6,19 @@ using Moq;
 
 namespace FuncoApi.Test.Repositories.Test;
 
+/// <summary>Comprueba que el repositorio de proveedores delega las operaciones en su fuente de datos.</summary>
 public class ProveedorRepositoryTests
 {
     private readonly Mock<IProveedorDataSource> _dataSource = new();
     private readonly ProveedorRepository _repository;
 
+    /// <summary>Inicializa el repositorio con una fuente de datos simulada.</summary>
     public ProveedorRepositoryTests()
     {
         _repository = new ProveedorRepository(_dataSource.Object);
     }
 
+    /// <summary>Comprueba que el listado devuelve todos los proveedores de la fuente de datos.</summary>
     [Fact]
     public async Task GetAllAsync_Returns_All_Proveedores()
     {
@@ -35,6 +38,7 @@ public class ProveedorRepositoryTests
         _dataSource.Verify(ds => ds.GetAllAsync(), Times.Once);
     }
 
+    /// <summary>Comprueba que la búsqueda devuelve el proveedor existente.</summary>
     [Fact]
     public async Task GetByIdAsync_Returns_Proveedor_When_Exists()
     {
@@ -49,6 +53,7 @@ public class ProveedorRepositoryTests
         _dataSource.Verify(ds => ds.GetByIdAsync(5), Times.Once);
     }
 
+    /// <summary>Comprueba que la búsqueda propaga el resultado nulo de la fuente de datos.</summary>
     [Fact]
     public async Task GetByIdAsync_Returns_Null_When_Not_Found()
     {
@@ -60,6 +65,7 @@ public class ProveedorRepositoryTests
         _dataSource.Verify(ds => ds.GetByIdAsync(999), Times.Once);
     }
 
+    /// <summary>Comprueba que la creación delega la inserción y devuelve el proveedor creado.</summary>
     [Fact]
     public async Task CreateAsync_Inserts_Proveedor()
     {
@@ -74,6 +80,7 @@ public class ProveedorRepositoryTests
         _dataSource.Verify(ds => ds.CreateAsync(proveedor), Times.Once);
     }
 
+    /// <summary>Comprueba que la eliminación devuelve el proveedor cuando existe.</summary>
     [Fact]
     public async Task DeleteAsync_Returns_Proveedor_When_Exists()
     {
@@ -88,6 +95,7 @@ public class ProveedorRepositoryTests
         _dataSource.Verify(ds => ds.DeleteAsync(3), Times.Once);
     }
 
+    /// <summary>Comprueba que la eliminación propaga un resultado nulo cuando no existe.</summary>
     [Fact]
     public async Task DeleteAsync_Returns_Null_When_Not_Found()
     {
@@ -99,6 +107,7 @@ public class ProveedorRepositoryTests
         _dataSource.Verify(ds => ds.DeleteAsync(123), Times.Once);
     }
 
+    /// <summary>Comprueba que la actualización delega y devuelve el proveedor actualizado.</summary>
     [Fact]
     public async Task UpdateAsync_Updates_Existing_Proveedor()
     {
@@ -113,6 +122,7 @@ public class ProveedorRepositoryTests
         _dataSource.Verify(ds => ds.UpdateAsync(updated), Times.Once);
     }
 
+    /// <summary>Comprueba que la actualización propaga un resultado nulo cuando no existe.</summary>
     [Fact]
     public async Task UpdateAsync_Returns_Null_When_Not_Found()
     {

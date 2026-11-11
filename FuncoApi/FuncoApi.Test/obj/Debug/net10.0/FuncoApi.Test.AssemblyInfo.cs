@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FuncoApi.Test")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b0066e05e4620a4d7e0cae87cb4ceaf1febfeb8e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc7498cc63fb29704cd0d243084567c6d29f2926")]
 [assembly: System.Reflection.AssemblyProductAttribute("FuncoApi.Test")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FuncoApi.Test")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

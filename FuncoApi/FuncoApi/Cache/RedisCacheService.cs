@@ -4,16 +4,19 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace FuncoApi.Cache;
 
+/// <summary>Implementa <see cref="ICacheService"/> serializando valores sobre <see cref="IDistributedCache"/>.</summary>
 public class RedisCacheService : ICacheService
 {
     private readonly IDistributedCache _cache;
 
+    /// <summary>Crea el adaptador para una caché distribuida.</summary>
     public RedisCacheService(
         IDistributedCache cache)
     {
         _cache = cache;
     }
 
+    /// <inheritdoc />
     public async Task<T?> GetAsync<T>(string key)
     {
         var data = await _cache.GetStringAsync(key);
@@ -24,6 +27,7 @@ public class RedisCacheService : ICacheService
         return JsonSerializer.Deserialize<T>(data);
     }
 
+    /// <inheritdoc />
     public async Task SetAsync<T>(
         string key,
         T value,
@@ -42,6 +46,7 @@ public class RedisCacheService : ICacheService
             options);
     }
 
+    /// <inheritdoc />
     public async Task RemoveAsync(string key)
     {
         await _cache.RemoveAsync(key);

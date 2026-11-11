@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="CSharpFunctionalExtensions" Version="3.7.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.1" />
         <PackageReference Include="MongoDB.Driver" Version="3.13.0" />
@@ -20,9 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controlers\" />
       <Folder Include="Data\" />
-      <Folder Include="Erros\" />
       <Folder Include="Mappers\" />
       <Folder Include="Services\CategoriaService\" />
       <Folder Include="Services\ProveedoresService\" />

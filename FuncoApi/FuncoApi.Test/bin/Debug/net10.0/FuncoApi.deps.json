@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v10.0": {
       "FuncoApi/1.0.0": {
         "dependencies": {
+          "CSharpFunctionalExtensions": "3.7.0",
           "Microsoft.AspNetCore.OpenApi": "10.0.1",
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.1",
           "MongoDB.Driver": "3.13.0"
@@ -39,6 +40,14 @@
           "lib/net8.0/Azure.Identity.dll": {
             "assemblyVersion": "1.14.2.0",
             "fileVersion": "1.1400.225.36004"
+          }
+        }
+      },
+      "CSharpFunctionalExtensions/3.7.0": {
+        "runtime": {
+          "lib/net8.0/CSharpFunctionalExtensions.dll": {
+            "assemblyVersion": "3.7.0.0",
+            "fileVersion": "3.7.0.0"
           }
         }
       },
@@ -432,6 +441,13 @@
       "sha512": "sha512-YhNMwOTwT+I2wIcJKSdP0ADyB2aK+JaYWZxO8LSRDm5w77LFr0ykR9xmt2ZV5T1gaI7xU6iNFIh/yW1dAlpddQ==",
       "path": "azure.identity/1.14.2",
       "hashPath": "azure.identity.1.14.2.nupkg.sha512"
+    },
+    "CSharpFunctionalExtensions/3.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eMZp8tc88O96eEFutiIskF3LE8lFY3fjbNRGfNa1ca0CD9sB8A00r5ltyYDih/7UFdJdVbhVq7tGeHI8xj6DlQ==",
+      "path": "csharpfunctionalextensions/3.7.0",
+      "hashPath": "csharpfunctionalextensions.3.7.0.nupkg.sha512"
     },
     "DnsClient/1.6.1": {
       "type": "package",

@@ -1,6 +1,49 @@
 @FuncoApi_HostAddress = http://localhost:5047
+@FunkoId = 1
 
-GET {{FuncoApi_HostAddress}}/weatherforecast/
+### Lista Funkos activos
+GET {{FuncoApi_HostAddress}}/api/funcopops
 Accept: application/json
 
 ###
+
+### Obtiene un Funko por ID
+GET {{FuncoApi_HostAddress}}/api/funcopops/{{FunkoId}}
+Accept: application/json
+
+###
+
+### Crea un Funko
+POST {{FuncoApi_HostAddress}}/api/funcopops
+Content-Type: application/json
+
+{
+  "nombre": "Spider-Man",
+  "imagen": "https://example.com/spiderman.png",
+  "precio": 14.99,
+  "stock": 5,
+  "categoria": "marvel",
+  "proveedor": 1
+}
+
+###
+
+### Actualiza un Funko (el ID del cuerpo debe coincidir con la ruta)
+PUT {{FuncoApi_HostAddress}}/api/funcopops/{{FunkoId}}
+Content-Type: application/json
+
+{
+  "id": {{FunkoId}},
+  "nombre": "Spider-Man",
+  "imagen": "https://example.com/spiderman.png",
+  "precio": 14.99,
+  "stock": 5,
+  "categoria": "marvel",
+  "proveedor": 1
+}
+
+###
+
+### Elimina lógicamente un Funko
+DELETE {{FuncoApi_HostAddress}}/api/funcopops/{{FunkoId}}
+Accept: application/json

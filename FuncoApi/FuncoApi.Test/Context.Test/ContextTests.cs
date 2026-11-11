@@ -6,8 +6,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace FuncoApi.Test.Context.Test;
 
+/// <summary>Pruebas del modelo EF Core, contextos MongoDB y opciones de conexión.</summary>
 public class FuncoDbContextTests
 {
+    /// <summary>Comprueba que el contexto relacional expone todos sus conjuntos.</summary>
     [Fact]
     public void FuncoDbContext_ShouldExposeConfiguredDbSets()
     {
@@ -24,6 +26,7 @@ public class FuncoDbContextTests
         Assert.NotNull(context.Roles);
     }
 
+    /// <summary>Comprueba que el modelo relacional crea índices para categoría y proveedor de Funko.</summary>
     [Fact]
     public void FuncoDbContext_OnModelCreating_ShouldConfigureFunkoEntityIndexes()
     {
@@ -40,8 +43,10 @@ public class FuncoDbContextTests
     }
 }
 
+/// <summary>Comprueba la inicialización de MongoDB a partir de la configuración.</summary>
 public class MongoDbContextTests
 {
+    /// <summary>Comprueba la base y la colección seleccionadas por el contexto Mongo.</summary>
     [Fact]
     public void MongoDbContext_ShouldCreateCollectionFromConfiguration()
     {
@@ -60,6 +65,7 @@ public class MongoDbContextTests
         Assert.Equal("test_db", context.Proveedores.Database.DatabaseNamespace.DatabaseName);
     }
 
+    /// <summary>Comprueba que la ausencia de cadena de conexión se comunica como configuración inválida.</summary>
     [Fact]
     public void MongoDbContext_ShouldThrow_WhenConnectionStringIsMissing()
     {
@@ -74,6 +80,7 @@ public class MongoDbContextTests
         Assert.Equal("Mongo connection string is not configured.", exception.Message);
     }
 
+    /// <summary>Comprueba que la ausencia del nombre de base se comunica como configuración inválida.</summary>
     [Fact]
     public void MongoDbContext_ShouldThrow_WhenDatabaseNameIsMissing()
     {
@@ -89,8 +96,10 @@ public class MongoDbContextTests
     }
 }
 
+/// <summary>Comprueba el almacenamiento de los valores de configuración de MongoDB.</summary>
 public class MongoSettingsTests
 {
+    /// <summary>Comprueba que las opciones conservan la cadena y el nombre de base asignados.</summary>
     [Fact]
     public void MongoSettings_ShouldStoreConnectionData()
     {
@@ -104,4 +113,3 @@ public class MongoSettingsTests
         Assert.Equal("test_db", settings.DatabaseName);
     }
 }
-

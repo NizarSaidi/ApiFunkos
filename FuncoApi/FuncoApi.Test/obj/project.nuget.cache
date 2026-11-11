@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "1wwiIX40eKs=",
+  "dgSpecHash": "2KaY847bNyw=",
   "success": true,
   "projectFilePath": "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\ApiFunkos\\FuncoApi\\FuncoApi.Test\\FuncoApi.Test.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\NIZAR\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
     "C:\\Users\\NIZAR\\.nuget\\packages\\castle.core\\5.2.1\\castle.core.5.2.1.nupkg.sha512",
     "C:\\Users\\NIZAR\\.nuget\\packages\\coverlet.collector\\6.0.2\\coverlet.collector.6.0.2.nupkg.sha512",
+    "C:\\Users\\NIZAR\\.nuget\\packages\\csharpfunctionalextensions\\3.7.0\\csharpfunctionalextensions.3.7.0.nupkg.sha512",
     "C:\\Users\\NIZAR\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\NIZAR\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.1\\microsoft.aspnetcore.openapi.10.0.1.nupkg.sha512",
     "C:\\Users\\NIZAR\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",

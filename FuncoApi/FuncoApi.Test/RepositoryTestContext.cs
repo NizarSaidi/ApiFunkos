@@ -9,8 +9,10 @@ using Moq;
 
 namespace FuncoApi.Test;
 
+/// <summary>Construye contextos y conjuntos EF Core simulados para las pruebas de repositorios.</summary>
 internal static class RepositoryTestContext
 {
+    /// <summary>Crea un contexto EF Core simulado cuya operación de guardado tiene éxito.</summary>
     public static Mock<FuncoDbContext> CreateContext()
     {
         var context = new Mock<FuncoDbContext>(new DbContextOptions<FuncoDbContext>());
@@ -19,6 +21,11 @@ internal static class RepositoryTestContext
         return context;
     }
 
+    /// <summary>Crea un DbSet simulado sobre una lista y soporta consultas asíncronas.</summary>
+    /// <typeparam name="T">Tipo de entidad incluido en el conjunto.</typeparam>
+    /// <param name="data">Lista que actúa como almacenamiento de la prueba.</param>
+    /// <param name="onAdd">Acción opcional ejecutada tras agregar una entidad.</param>
+    /// <returns>Un DbSet simulado que consulta y modifica la lista suministrada.</returns>
     public static Mock<DbSet<T>> CreateDbSet<T>(List<T> data, Action<T>? onAdd = null)
         where T : class
     {
@@ -51,6 +58,7 @@ internal static class RepositoryTestContext
         return dbSet;
     }
 
+    /// <summary>Adapta un proveedor LINQ síncrono a las operaciones de consulta asíncronas de EF Core.</summary>
     private sealed class TestAsyncQueryProvider<TEntity>(IQueryProvider innerProvider) : IAsyncQueryProvider
     {
         public IQueryable CreateQuery(Expression expression)
@@ -94,6 +102,7 @@ internal static class RepositoryTestContext
         }
     }
 
+    /// <summary>Envuelve un enumerable LINQ para exponer un proveedor y enumerador asíncronos.</summary>
     private sealed class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
     {
         public TestAsyncEnumerable(IEnumerable<T> enumerable) : base(enumerable)
@@ -112,6 +121,7 @@ internal static class RepositoryTestContext
         }
     }
 
+    /// <summary>Adapta un enumerador síncrono a la interfaz de enumeración asíncrona de EF Core.</summary>
     private sealed class TestAsyncEnumerator<T>(IEnumerator<T> innerEnumerator) : IAsyncEnumerator<T>
     {
         public T Current => innerEnumerator.Current;
