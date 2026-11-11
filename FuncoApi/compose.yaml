@@ -1,0 +1,13 @@
+﻿services:
+  funcoapi:
+    image: funcoapi
+    build:
+      context: .
+      dockerfile: FuncoApi/Dockerfile
+
+  funcoapi.test:
+    image: funcoapi.test
+    build:
+      context: .
+      dockerfile: FuncoApi.Test/Dockerfile
+
