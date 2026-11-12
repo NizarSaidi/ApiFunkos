@@ -4,7 +4,7 @@
 public class User
 {
     /// <summary>Identificador del usuario.</summary>
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     /// <summary>Nombre del usuario.</summary>
     public string Nombre { get; set; } = string.Empty;
@@ -15,6 +15,6 @@ public class User
     /// <summary>Campo de contraseña del modelo; el modelo no define su almacenamiento seguro.</summary>
     public string Password { get; set; } = string.Empty;
 
-    /// <summary>Identificador del rol asignado al usuario.</summary>
-    public int RolId { get; set; }
+    /// <summary>rol asignado al usuario.</summary>
+    public string Rol { get; set; } = string.Empty;
 }

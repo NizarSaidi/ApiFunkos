@@ -33,13 +33,12 @@ public class ModelTests
         Assert.Equal("Funko", proveedor.Nombre);
     }
 
-    /// <summary>Comprueba el identificador predeterminado y el nombre inicial de un rol.</summary>
+    /// <summary>Comprueba el nombre inicial de un rol.</summary>
     [Fact]
-    public void Rol_ShouldHaveDefaultEmptyStringForNombre()
+    public void Rol_ShouldHaveDefaultValues()
     {
         var rol = new Rol();
 
-        Assert.Equal(0, rol.Id);
         Assert.Equal(string.Empty, rol.Nombre);
     }
 
@@ -49,24 +48,24 @@ public class ModelTests
     {
         var user = new User
         {
-            Id = 10,
+            Id = Guid.NewGuid(),
             Nombre = "Ana",
             Email = "ana@example.com",
             Password = "secret",
-            RolId = 2
+            Rol = "Admin"
         };
 
-        Assert.Equal(10, user.Id);
+        Assert.NotEqual(Guid.Empty, user.Id);
         Assert.Equal("Ana", user.Nombre);
         Assert.Equal("ana@example.com", user.Email);
         Assert.Equal("secret", user.Password);
-        Assert.Equal(2, user.RolId);
+        Assert.Equal("Admin", user.Rol);
 
         var emptyUser = new User();
-        Assert.Equal(0, emptyUser.Id);
+        Assert.Equal(Guid.Empty, emptyUser.Id);
         Assert.Equal(string.Empty, emptyUser.Nombre);
         Assert.Equal(string.Empty, emptyUser.Email);
         Assert.Equal(string.Empty, emptyUser.Password);
-        Assert.Equal(0, emptyUser.RolId);
+        Assert.Equal(string.Empty, emptyUser.Rol);
     }
 }

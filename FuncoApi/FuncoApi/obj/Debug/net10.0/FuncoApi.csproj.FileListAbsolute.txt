@@ -160,3 +160,5 @@ C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\Funco
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi\obj\Debug\net10.0\FuncoApi.pdb
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi\obj\Debug\net10.0\FuncoApi.genruntimeconfig.cache
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi\obj\Debug\net10.0\ref\FuncoApi.dll
+C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi\bin\Debug\net10.0\BCrypt-Net-Next.dll

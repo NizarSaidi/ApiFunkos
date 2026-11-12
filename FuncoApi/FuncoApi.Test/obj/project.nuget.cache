@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Wo3VqIzJrRM=",
+  "dgSpecHash": "dDVRPqahT5Q=",
   "success": true,
   "projectFilePath": "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\ApiFunkos\\FuncoApi\\FuncoApi.Test\\FuncoApi.Test.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\NIZAR\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\NIZAR\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
+    "C:\\Users\\NIZAR\\.nuget\\packages\\bcrypt.net-next\\4.2.0\\bcrypt.net-next.4.2.0.nupkg.sha512",
     "C:\\Users\\NIZAR\\.nuget\\packages\\castle.core\\5.2.1\\castle.core.5.2.1.nupkg.sha512",
     "C:\\Users\\NIZAR\\.nuget\\packages\\coverlet.collector\\6.0.2\\coverlet.collector.6.0.2.nupkg.sha512",
     "C:\\Users\\NIZAR\\.nuget\\packages\\csharpfunctionalextensions\\3.7.0\\csharpfunctionalextensions.3.7.0.nupkg.sha512",

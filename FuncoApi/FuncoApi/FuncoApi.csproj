@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
         <PackageReference Include="CSharpFunctionalExtensions" Version="3.7.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.15" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
@@ -22,8 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\" />
-      <Folder Include="Mappers\" />
       <Folder Include="Services\CategoriaService\" />
       <Folder Include="Services\ProveedoresService\" />
       <Folder Include="Validators\" />

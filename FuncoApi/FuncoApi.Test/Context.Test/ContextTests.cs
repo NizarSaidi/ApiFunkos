@@ -21,9 +21,7 @@ public class FuncoDbContextTests
 
         Assert.NotNull(context.Funkos);
         Assert.NotNull(context.Categorias);
-        Assert.NotNull(context.Proveedores);
         Assert.NotNull(context.Usuarios);
-        Assert.NotNull(context.Roles);
     }
 
     /// <summary>Comprueba que el modelo relacional crea índices para categoría y proveedor de Funko.</summary>

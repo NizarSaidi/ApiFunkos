@@ -28,6 +28,32 @@ public class FuncoDbContext(DbContextOptions<FuncoDbContext> options) : DbContex
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("CONVERT(nvarchar(36), NEWID())");
         });
+        
+        modelBuilder.Entity<UserEntity>(entity =>
+        {
+            entity.HasKey(u => u.Id);
+
+            entity.Property(u => u.Nombre)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(u => u.Email)
+                .HasMaxLength(255)
+                .IsRequired();
+
+            entity.Property(u => u.Password)
+                .IsRequired();
+
+            entity.Property(u => u.Rol)
+                .HasMaxLength(20)
+                .IsRequired();
+
+            entity.HasIndex(u => u.Email)
+                .IsUnique();
+
+            entity.HasIndex(u => u.Nombre)
+                .IsUnique();
+        });
     }
     /// <summary>Conjunto relacional de Funkos activos.</summary>
     public virtual DbSet<FunkoEntity> Funkos => Set<FunkoEntity>();
@@ -35,12 +61,7 @@ public class FuncoDbContext(DbContextOptions<FuncoDbContext> options) : DbContex
     /// <summary>Conjunto relacional de categorías.</summary>
     public virtual DbSet<CategoriaEntity> Categorias => Set<CategoriaEntity>();
 
-    /// <summary>Conjunto relacional de proveedores si se utiliza en el modelo SQL.</summary>
-    public virtual DbSet<ProveedorEntity> Proveedores => Set<ProveedorEntity>();
-
     /// <summary>Conjunto de usuarios definido por el modelo de persistencia.</summary>
-    public virtual DbSet<User> Usuarios => Set<User>();
+    public virtual DbSet<UserEntity> Usuarios => Set<UserEntity>();
 
-    /// <summary>Conjunto de roles definido por el modelo de persistencia.</summary>
-    public virtual DbSet<Rol> Roles => Set<Rol>();
 }
