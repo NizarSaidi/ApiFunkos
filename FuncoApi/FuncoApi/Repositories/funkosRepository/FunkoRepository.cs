@@ -1,4 +1,6 @@
-﻿using FuncoApi.Context;
+﻿using CSharpFunctionalExtensions;
+using FuncoApi.Context;
+using FuncoApi.Domain;
 using FuncoApi.Entity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,12 +18,25 @@ public class FunkoRepository : IFunkoRepository
     }
     
     /// <inheritdoc />
-    public async Task<IReadOnlyList<FunkoEntity>> GetAllAsync()
+    public async Task<Result<(IReadOnlyList<FunkoEntity> Objs, int Count), DomainError>> GetAllAsync(
+        int page, int pageSize)
     {
-        return await _context.Funkos
+        if (page <= 0 || pageSize <= 0)
+        {
+            return Result.Failure<(IReadOnlyList<FunkoEntity> Objs, int Count), DomainError>(
+                Errors.Validation("La página y el tamaño de página deben ser mayores que cero."));
+        }
+
+        var funkos = await _context.Funkos
             .AsNoTracking()
             .Where(funko => !funko.IsDeleted)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+        var count = await _context.Funkos.CountAsync(funko => !funko.IsDeleted);
+
+        return Result.Success<(IReadOnlyList<FunkoEntity> Objs, int Count), DomainError>(
+            (funkos, count));
     }
 
     /// <inheritdoc />

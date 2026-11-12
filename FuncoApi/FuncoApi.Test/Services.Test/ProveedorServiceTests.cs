@@ -1,9 +1,11 @@
 using FuncoApi.Cache.objet;
+using FuncoApi.Configure;
 using FuncoApi.Domain;
 using FuncoApi.Entity;
 using FuncoApi.Models;
 using FuncoApi.Repositories.proveedoresRepository;
 using FuncoApi.Services.ProveedoresService;
+using CSharpFunctionalExtensions;
 using Moq;
 
 namespace FuncoApi.Test.Services.Test;
@@ -11,13 +13,63 @@ namespace FuncoApi.Test.Services.Test;
 /// <summary>Comprueba validación, mapeo y errores del servicio de proveedores.</summary>
 public class ProveedorServiceTests
 {
+    /// <summary>Comprueba que el servicio pasa la página y el tamaño configurado al repositorio.</summary>
+    [Fact]
+    public async Task GetAll_RequestsPageFromRepository_WhenCacheIsEmpty()
+    {
+        var (service, repository, cache) = CreateService();
+        cache.Setup(item => item.GetAsync<List<Proveedor>>("proveedores:all"))
+            .ReturnsAsync((List<Proveedor>?)null);
+        repository.Setup(repo => repo.GetAllAsync(2, ConfigurationApp.PageSize))
+            .ReturnsAsync(Result.Success<(IReadOnlyList<ProveedorEntity> Objs, int Count), DomainError>(
+                (new List<ProveedorEntity> { new() { Id = 20, Nombre = "Página 2" } }, 12)));
+
+        var result = await service.GetAll(2);
+
+        Assert.True(result.IsSuccess);
+        var proveedor = Assert.Single(result.Value.Objs);
+        Assert.Equal(20, proveedor.Id);
+        Assert.Equal("Página 2", proveedor.Nombre);
+        Assert.Equal(12, result.Value.Count);
+        repository.Verify(repo => repo.GetAllAsync(2, ConfigurationApp.PageSize), Times.Once);
+    }
+
+    /// <summary>Comprueba que el servicio propaga el error de persistencia del repositorio.</summary>
+    [Fact]
+    public async Task GetAll_PropagatesRepositoryDomainError()
+    {
+        var (service, repository, _) = CreateService();
+        var error = Errors.PersistenceFailure("los proveedores");
+        repository.Setup(repo => repo.GetAllAsync(1, ConfigurationApp.PageSize))
+            .ReturnsAsync(Result.Failure<(IReadOnlyList<ProveedorEntity> Objs, int Count), DomainError>(error));
+
+        var result = await service.GetAll();
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(error, result.Error);
+    }
+
+    /// <summary>Comprueba que una página inválida devuelve un error de dominio sin consultar persistencia.</summary>
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task GetAll_ReturnsValidationError_WhenPageIsNotPositive(int page)
+    {
+        var (service, repository, _) = CreateService();
+
+        var result = await service.GetAll(page);
+
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
+        repository.Verify(repo => repo.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+    }
+
     /// <summary>Comprueba que un proveedor no válido no se envía al repositorio.</summary>
     [Fact]
     public async Task Create_ReturnsValidationError_WithoutCallingRepository()
     {
         var (service, repository, _) = CreateService();
 
-        var result = await service.Create(new Proveedor { Id = 0, Nombre = "Proveedor" });
+        var result = await service.Create(new Proveedor { Id = 0, Nombre = string.Empty });
 
         Assert.True(result.IsFailure);
         Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
@@ -152,6 +204,34 @@ public class ProveedorServiceTests
         var result = await service.Delete(5);
 
         Assert.Equal(DomainErrorCode.NotFound, result.Error.Code);
+    }
+
+    /// <summary>Comprueba que eliminar con un identificador inválido devuelve un error de validación.</summary>
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task Delete_ReturnsValidationError_WhenIdIsInvalid(int id)
+    {
+        var (service, repository, _) = CreateService();
+
+        var result = await service.Delete(id);
+
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
+        repository.Verify(repo => repo.DeleteAsync(It.IsAny<int>()), Times.Never);
+    }
+
+    /// <summary>Comprueba que actualizar con un identificador inválido devuelve un error de validación.</summary>
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task Update_ReturnsValidationError_WhenIdIsInvalid(int id)
+    {
+        var (service, repository, _) = CreateService();
+
+        var result = await service.Update(id, new Proveedor { Id = id, Nombre = "Distribuidor" });
+
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
+        repository.Verify(repo => repo.UpdateAsync(It.IsAny<ProveedorEntity>()), Times.Never);
     }
 
     /// <summary>Comprueba que un ID distinto al del modelo falla antes de persistir.</summary>

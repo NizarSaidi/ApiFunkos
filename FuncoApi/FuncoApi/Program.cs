@@ -9,7 +9,6 @@ using FuncoApi.Repositories.proveedoresRepository;
 using FuncoApi.Services.CategoriaService;
 using FuncoApi.Services.FunkosService;
 using FuncoApi.Services.ProveedoresService;
-using FunkoApi.Routes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +51,7 @@ builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -62,7 +62,7 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.EnsureCreatedAsync();
 }
 
-// Publica los endpoints HTTP de Funkos.
-app.MapFunkosRoutes();
+// Publica los controladores HTTP de la API.
+app.MapControllers();
 
 app.Run();

@@ -1,9 +1,11 @@
 using FuncoApi.Cache.objet;
+using FuncoApi.Configure;
 using FuncoApi.Domain;
 using FuncoApi.Entity;
 using FuncoApi.Models;
 using FuncoApi.Repositories;
 using FuncoApi.Services.CategoriaService;
+using CSharpFunctionalExtensions;
 using Moq;
 
 namespace FuncoApi.Test.Services.Test;
@@ -11,6 +13,55 @@ namespace FuncoApi.Test.Services.Test;
 /// <summary>Comprueba validación, mapeo y errores del servicio de categorías.</summary>
 public class CategoriaServiceTests
 {
+    /// <summary>Comprueba que el servicio pasa la página y el tamaño configurado al repositorio.</summary>
+    [Fact]
+    public async Task GetAll_RequestsPageFromRepository_WhenCacheIsEmpty()
+    {
+        var (service, repository, cache) = CreateService();
+        cache.Setup(item => item.GetAsync<List<Categoria>>("categorias:all"))
+            .ReturnsAsync((List<Categoria>?)null);
+        repository.Setup(repo => repo.GetAllAsync(2, ConfigurationApp.PageSize))
+            .ReturnsAsync(Result.Success<(IReadOnlyList<CategoriaEntity> Objs, int Count), DomainError>(
+                (new List<CategoriaEntity> { new() { Id = "manga", Nombre = "Manga" } }, 11)));
+
+        var result = await service.GetAll(2);
+
+        Assert.True(result.IsSuccess);
+        var categoria = Assert.Single(result.Value.Objs);
+        Assert.Equal("manga", categoria.Id);
+        Assert.Equal(11, result.Value.Count);
+        repository.Verify(repo => repo.GetAllAsync(2, ConfigurationApp.PageSize), Times.Once);
+    }
+
+    /// <summary>Comprueba que el servicio propaga el error de persistencia del repositorio.</summary>
+    [Fact]
+    public async Task GetAll_PropagatesRepositoryDomainError()
+    {
+        var (service, repository, _) = CreateService();
+        var error = Errors.PersistenceFailure("las categorías");
+        repository.Setup(repo => repo.GetAllAsync(1, ConfigurationApp.PageSize))
+            .ReturnsAsync(Result.Failure<(IReadOnlyList<CategoriaEntity> Objs, int Count), DomainError>(error));
+
+        var result = await service.GetAll();
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(error, result.Error);
+    }
+
+    /// <summary>Comprueba que una página inválida devuelve un error de dominio sin consultar persistencia.</summary>
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task GetAll_ReturnsValidationError_WhenPageIsNotPositive(int page)
+    {
+        var (service, repository, _) = CreateService();
+
+        var result = await service.GetAll(page);
+
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
+        repository.Verify(repo => repo.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+    }
+
     /// <summary>Comprueba que una categoría no válida no se envía al repositorio.</summary>
     [Fact]
     public async Task Create_ReturnsValidationError_WithoutCallingRepository()
@@ -152,6 +203,34 @@ public class CategoriaServiceTests
         var result = await service.Delete("anime");
 
         Assert.Equal(DomainErrorCode.NotFound, result.Error.Code);
+    }
+
+    /// <summary>Comprueba que eliminar con un identificador vacío devuelve un error de validación.</summary>
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    public async Task Delete_ReturnsValidationError_WhenIdIsMissing(string id)
+    {
+        var (service, repository, _) = CreateService();
+
+        var result = await service.Delete(id);
+
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
+        repository.Verify(repo => repo.DeleteAsync(It.IsAny<string>()), Times.Never);
+    }
+
+    /// <summary>Comprueba que actualizar con un identificador vacío devuelve un error de validación.</summary>
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    public async Task Update_ReturnsValidationError_WhenIdIsMissing(string id)
+    {
+        var (service, repository, _) = CreateService();
+
+        var result = await service.Update(id, new Categoria { Id = "anime", Nombre = "Anime" });
+
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
+        repository.Verify(repo => repo.UpdateAsync(It.IsAny<CategoriaEntity>()), Times.Never);
     }
 
     /// <summary>Comprueba que un identificador distinto al del modelo falla antes de persistir.</summary>

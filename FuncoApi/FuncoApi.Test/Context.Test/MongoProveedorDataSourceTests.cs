@@ -1,4 +1,5 @@
 using FuncoApi.Context.Mongo;
+using FuncoApi.Domain;
 using FuncoApi.Entity;
 using Microsoft.Extensions.Configuration;
 using Mongo2Go;
@@ -48,11 +49,46 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
             new ProveedorEntity { Id = 2, Nombre = "Proveedor B" }
         });
 
-        var result = await _dataSource.GetAllAsync();
+        var result = await _dataSource.GetAllAsync(1, 10);
 
-        Assert.Equal(2, result.Count);
-        Assert.Contains(result, p => p.Id == 1 && p.Nombre == "Proveedor A");
-        Assert.Contains(result, p => p.Id == 2 && p.Nombre == "Proveedor B");
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Count);
+        Assert.Equal(2, result.Value.Objs.Count);
+        Assert.Contains(result.Value.Objs, p => p.Id == 1 && p.Nombre == "Proveedor A");
+        Assert.Contains(result.Value.Objs, p => p.Id == 2 && p.Nombre == "Proveedor B");
+    }
+
+    /// <summary>Comprueba que el origen Mongo devuelve solo los documentos de la página solicitada.</summary>
+    [Fact]
+    public async Task GetAllAsync_Returns_Requested_Page()
+    {
+        await _context.Proveedores.InsertManyAsync(new[]
+        {
+            new ProveedorEntity { Id = 1, Nombre = "Proveedor A" },
+            new ProveedorEntity { Id = 2, Nombre = "Proveedor B" },
+            new ProveedorEntity { Id = 3, Nombre = "Proveedor C" }
+        });
+
+        var result = await _dataSource.GetAllAsync(page: 2, pageSize: 1);
+
+        Assert.True(result.IsSuccess);
+        var proveedor = Assert.Single(result.Value.Objs);
+        Assert.Equal(2, proveedor.Id);
+        Assert.Equal(3, result.Value.Count);
+    }
+
+    /// <summary>Comprueba que una paginación inválida devuelve validación sin consultar MongoDB.</summary>
+    [Theory]
+    [InlineData(0, 10)]
+    [InlineData(1, 0)]
+    [InlineData(-1, 10)]
+    [InlineData(1, -1)]
+    public async Task GetAllAsync_Returns_Validation_Error_When_Pagination_Is_Invalid(int page, int pageSize)
+    {
+        var result = await _dataSource.GetAllAsync(page, pageSize);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
     }
 
     /// <summary>Comprueba que la consulta por ID devuelve el proveedor existente.</summary>
@@ -82,14 +118,16 @@ public class MongoProveedorDataSourceTests : IAsyncLifetime
     [Fact]
     public async Task CreateAsync_Inserts_Proveedor_And_Returns_It()
     {
-        var proveedor = new ProveedorEntity { Id = 7, Nombre = "Nuevo" };
+        await _context.Proveedores.InsertOneAsync(
+            new ProveedorEntity { Id = 7, Nombre = "Existente" });
+        var proveedor = new ProveedorEntity { Id = 0, Nombre = "Nuevo" };
 
         var result = await _dataSource.CreateAsync(proveedor);
 
         Assert.NotNull(result);
-        Assert.Equal(7, result!.Id);
+        Assert.Equal(8, result!.Id);
         Assert.Equal("Nuevo", result.Nombre);
-        Assert.NotNull(await _dataSource.GetByIdAsync(7));
+        Assert.NotNull(await _dataSource.GetByIdAsync(8));
     }
 
     /// <summary>Comprueba que borrar un proveedor devuelve el documento y lo elimina de MongoDB.</summary>

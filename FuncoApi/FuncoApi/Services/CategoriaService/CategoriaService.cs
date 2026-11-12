@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using FuncoApi.Cache.objet;
+using FuncoApi.Configure;
 using FuncoApi.Domain;
 using FuncoApi.Mappers;
 using FuncoApi.Models;
@@ -26,22 +27,29 @@ public class CategoriaService : ICategoriaService
         _categoriaRepository = categoriaRepository;
     }
 
-    /// <summary>Obtiene todas las categorías, usando la caché si existe una lista vigente.</summary>
-    /// <returns>Resultado con las categorías o un error de dominio.</returns>
-    public async Task<Result<IReadOnlyList<Categoria>, DomainError>> GetAll()
+    /// <summary>Obtiene una página de categorías y el total, o devuelve errores de validación o consulta.</summary>
+    /// <param name="page">Número de página, empezando por 1.</param>
+    /// <returns>Resultado con las categorías de la página y el total de categorías.</returns>
+    public async Task<Result<(IReadOnlyList<Categoria> Objs, int Count), DomainError>> GetAll(int page = 1)
     {
-        var cachedCategorias = await _cache.GetAsync<List<Categoria>>(AllCategoriasCacheKey);
-        if (cachedCategorias is not null)
+        if (page <= 0)
         {
-            return Result.Success<IReadOnlyList<Categoria>, DomainError>(cachedCategorias);
+            return Result.Failure<(IReadOnlyList<Categoria> Objs, int Count), DomainError>(
+                Errors.Validation("El número de página debe ser mayor que cero."));
         }
 
-        var categorias = (await _categoriaRepository.GetAllAsync())
+        var result = await _categoriaRepository.GetAllAsync(page, ConfigurationApp.PageSize);
+        if (result.IsFailure)
+        {
+            return Result.Failure<(IReadOnlyList<Categoria> Objs, int Count), DomainError>(result.Error);
+        }
+
+        var categorias = result.Value.Objs
             .Select(CategoriaMapper.ToModel)
             .ToList();
 
-        await _cache.SetAsync(AllCategoriasCacheKey, categorias, CacheExpiration);
-        return Result.Success<IReadOnlyList<Categoria>, DomainError>(categorias);
+        return Result.Success<(IReadOnlyList<Categoria> Objs, int Count), DomainError>(
+            (categorias, result.Value.Count));
     }
 
     /// <summary>Busca una categoría por su identificador y guarda el resultado en caché.</summary>
@@ -79,7 +87,7 @@ public class CategoriaService : ICategoriaService
     /// <returns>La categoría creada o un error de validación o persistencia.</returns>
     public async Task<Result<Categoria, DomainError>> Create(Categoria obj)
     {
-        var validationError = CategoriaValidator.Validate(obj);
+        var validationError = CategoriaValidator.Validate(obj, requireId: false);
         if (validationError is not null)
         {
             return Result.Failure<Categoria, DomainError>(validationError);

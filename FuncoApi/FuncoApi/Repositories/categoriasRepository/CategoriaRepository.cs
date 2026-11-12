@@ -1,4 +1,6 @@
+using CSharpFunctionalExtensions;
 using FuncoApi.Context;
+using FuncoApi.Domain;
 using FuncoApi.Entity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +18,23 @@ public class CategoriaRepository : ICategoriaRepository
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<CategoriaEntity>> GetAllAsync()
+    public async Task<Result<(IReadOnlyList<CategoriaEntity> Objs, int Count), DomainError>> GetAllAsync(int page, int pageSize)
     {
-        return await _context.Categorias
+        if (page <= 0 || pageSize <= 0)
+        {
+            return Result.Failure<(IReadOnlyList<CategoriaEntity> Objs, int Count), DomainError>(
+                Errors.Validation("La página y el tamaño de página deben ser mayores que cero."));
+        }
+
+        var categorias = await _context.Categorias
             .AsNoTracking()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+        var count = await _context.Categorias.CountAsync(categoria => !categoria.IsDeleted);
+
+        return Result.Success<(IReadOnlyList<CategoriaEntity> Objs, int Count), DomainError>(
+            (categorias, count));
     }
 
     /// <inheritdoc />
@@ -42,6 +56,7 @@ public class CategoriaRepository : ICategoriaRepository
     /// <inheritdoc />
     public async Task<CategoriaEntity?> CreateAsync(CategoriaEntity categoria)
     {
+        categoria.Id = null!;
         await _context.Categorias.AddAsync(categoria);
         await _context.SaveChangesAsync();
         return categoria;

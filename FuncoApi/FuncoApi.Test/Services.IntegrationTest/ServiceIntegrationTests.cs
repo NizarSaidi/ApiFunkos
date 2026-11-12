@@ -59,7 +59,8 @@ public class ServiceIntegrationTests : IAsyncLifetime
 
         var listed = await service.GetAll();
         Assert.True(listed.IsSuccess);
-        Assert.Contains(listed.Value, funko => funko.Id == id && funko.Nombre == "Spider-Man");
+        Assert.Contains(listed.Value.Objs, funko => funko.Id == id && funko.Nombre == "Spider-Man");
+        Assert.Equal(2, listed.Value.Count);
 
         var found = await service.GetById(id);
         Assert.True(found.IsSuccess);
@@ -93,49 +94,54 @@ public class ServiceIntegrationTests : IAsyncLifetime
         await using var context = CreateSqlContext();
         var cache = CreateCache();
         var service = new CategoriaService(cache, new CategoriaRepository(context));
-        var category = new Categoria { Id = "anime", Nombre = "Anime" };
+        var category = new Categoria { Id = string.Empty, Nombre = "Anime" };
 
         var emptyList = await service.GetAll();
-        Assert.Empty(emptyList.Value);
-        Assert.Same(emptyList.Value, (await service.GetAll()).Value);
+        Assert.Empty(emptyList.Value.Objs);
+        Assert.Equal(0, emptyList.Value.Count);
         var created = await service.Create(category);
 
         Assert.True(created.IsSuccess);
-        Assert.Equal(category.Id, created.Value.Id);
-        Assert.True((await service.Update(category.Id,
-            new Categoria { Id = category.Id, Nombre = category.Nombre })).IsSuccess);
+        Assert.False(string.IsNullOrWhiteSpace(created.Value.Id));
+        var categoryId = created.Value.Id;
+        Assert.True((await service.Update(categoryId,
+            new Categoria { Id = categoryId, Nombre = category.Nombre })).IsSuccess);
         Assert.Equal(DomainErrorCode.Conflict,
-            (await service.Create(new Categoria { Id = "manga", Nombre = "Anime" })).Error.Code);
-        Assert.True((await service.Create(new Categoria { Id = "manga", Nombre = "Manga" })).IsSuccess);
+            (await service.Create(new Categoria { Id = string.Empty, Nombre = "Anime" })).Error.Code);
+        var manga = await service.Create(new Categoria { Id = string.Empty, Nombre = "Manga" });
+        Assert.True(manga.IsSuccess);
         var listed = await service.GetAll();
         Assert.True(listed.IsSuccess);
-        Assert.Contains(listed.Value, item => item.Id == category.Id);
+        Assert.Contains(listed.Value.Objs, item => item.Id == categoryId);
+        Assert.Equal(2, listed.Value.Count);
 
-        var found = await service.GetById(category.Id);
+        var found = await service.GetById(categoryId);
         Assert.True(found.IsSuccess);
         Assert.Equal(category.Nombre, found.Value.Nombre);
-        Assert.Same(found.Value, (await service.GetById(category.Id)).Value);
+        Assert.Same(found.Value, (await service.GetById(categoryId)).Value);
 
-        var updated = new Categoria { Id = category.Id, Nombre = "Animación" };
+        var updated = new Categoria { Id = categoryId, Nombre = "Animación" };
         Assert.Equal(DomainErrorCode.Conflict, (await service.Update(
-            category.Id, new Categoria { Id = category.Id, Nombre = "Manga" })).Error.Code);
-        var updateResult = await service.Update(category.Id, updated);
+            categoryId, new Categoria { Id = categoryId, Nombre = "Manga" })).Error.Code);
+        var updateResult = await service.Update(categoryId, updated);
         Assert.True(updateResult.IsSuccess);
-        Assert.Equal("Animación", (await service.GetById(category.Id)).Value.Nombre);
-        Assert.Contains((await service.GetAll()).Value, item => item.Nombre == "Animación");
+        Assert.Equal("Animación", (await service.GetById(categoryId)).Value.Nombre);
+        var afterUpdate = await service.GetAll();
+        Assert.Contains(afterUpdate.Value.Objs, item => item.Nombre == "Animación");
+        Assert.Equal(2, afterUpdate.Value.Count);
 
-        var deleted = await service.Delete(category.Id);
+        var deleted = await service.Delete(categoryId);
         Assert.True(deleted.IsSuccess);
-        Assert.True((await service.Delete("manga")).IsSuccess);
+        Assert.True((await service.Delete(manga.Value.Id)).IsSuccess);
         var emptyAfterDelete = await service.GetAll();
-        Assert.Empty(emptyAfterDelete.Value);
-        Assert.Same(emptyAfterDelete.Value, (await service.GetAll()).Value);
-        var missing = await service.GetById(category.Id);
+        Assert.Empty(emptyAfterDelete.Value.Objs);
+        Assert.Equal(0, emptyAfterDelete.Value.Count);
+        var missing = await service.GetById(categoryId);
         Assert.True(missing.IsFailure);
         Assert.Equal(DomainErrorCode.NotFound, missing.Error.Code);
         Assert.Equal(DomainErrorCode.NotFound, (await service.Update(
-            category.Id, new Categoria { Id = category.Id, Nombre = "Anime" })).Error.Code);
-        Assert.Equal(DomainErrorCode.NotFound, (await service.Delete(category.Id)).Error.Code);
+            categoryId, new Categoria { Id = categoryId, Nombre = "Anime" })).Error.Code);
+        Assert.Equal(DomainErrorCode.NotFound, (await service.Delete(categoryId)).Error.Code);
     }
 
     [Fact]
@@ -153,49 +159,55 @@ public class ServiceIntegrationTests : IAsyncLifetime
         var service = new ProveedorService(
             CreateCache(),
             new ProveedorRepository(new MongoProveedorDataSource(context)));
-        var provider = new Proveedor { Id = 1, Nombre = "Distribuidor" };
+        var provider = new Proveedor { Id = 0, Nombre = "Distribuidor" };
 
         var emptyList = await service.GetAll();
-        Assert.Empty(emptyList.Value);
-        Assert.Same(emptyList.Value, (await service.GetAll()).Value);
+        Assert.Empty(emptyList.Value.Objs);
+        Assert.Equal(0, emptyList.Value.Count);
         var created = await service.Create(provider);
 
         Assert.True(created.IsSuccess);
-        Assert.Equal(provider.Id, created.Value.Id);
-        Assert.True((await service.Update(provider.Id,
-            new Proveedor { Id = provider.Id, Nombre = provider.Nombre })).IsSuccess);
+        Assert.True(created.Value.Id > 0);
+        var providerId = created.Value.Id;
+        Assert.True((await service.Update(providerId,
+            new Proveedor { Id = providerId, Nombre = provider.Nombre })).IsSuccess);
         Assert.Equal(DomainErrorCode.Conflict, (await service.Create(
-            new Proveedor { Id = 2, Nombre = "Distribuidor" })).Error.Code);
-        Assert.True((await service.Create(new Proveedor { Id = 2, Nombre = "Mayorista" })).IsSuccess);
+            new Proveedor { Id = 0, Nombre = "Distribuidor" })).Error.Code);
+        var wholesaler = await service.Create(new Proveedor { Id = 0, Nombre = "Mayorista" });
+        Assert.True(wholesaler.IsSuccess);
+        var wholesalerId = wholesaler.Value.Id;
         var listed = await service.GetAll();
         Assert.True(listed.IsSuccess);
-        Assert.Contains(listed.Value, item => item.Id == provider.Id);
+        Assert.Contains(listed.Value.Objs, item => item.Id == providerId);
+        Assert.Equal(2, listed.Value.Count);
 
-        var found = await service.GetById(provider.Id);
+        var found = await service.GetById(providerId);
         Assert.True(found.IsSuccess);
         Assert.Equal(provider.Nombre, found.Value.Nombre);
-        Assert.Same(found.Value, (await service.GetById(provider.Id)).Value);
+        Assert.Same(found.Value, (await service.GetById(providerId)).Value);
 
-        Assert.Equal(DomainErrorCode.Conflict, (await service.Update(provider.Id,
-            new Proveedor { Id = provider.Id, Nombre = "Mayorista" })).Error.Code);
-        var updated = new Proveedor { Id = provider.Id, Nombre = "Distribuidor actualizado" };
-        var updateResult = await service.Update(provider.Id, updated);
+        Assert.Equal(DomainErrorCode.Conflict, (await service.Update(providerId,
+            new Proveedor { Id = providerId, Nombre = "Mayorista" })).Error.Code);
+        var updated = new Proveedor { Id = providerId, Nombre = "Distribuidor actualizado" };
+        var updateResult = await service.Update(providerId, updated);
         Assert.True(updateResult.IsSuccess);
-        Assert.Equal("Distribuidor actualizado", (await service.GetById(provider.Id)).Value.Nombre);
-        Assert.Contains((await service.GetAll()).Value, item => item.Nombre == "Distribuidor actualizado");
+        Assert.Equal("Distribuidor actualizado", (await service.GetById(providerId)).Value.Nombre);
+        var afterUpdate = await service.GetAll();
+        Assert.Contains(afterUpdate.Value.Objs, item => item.Nombre == "Distribuidor actualizado");
+        Assert.Equal(2, afterUpdate.Value.Count);
 
-        var deleted = await service.Delete(provider.Id);
+        var deleted = await service.Delete(providerId);
         Assert.True(deleted.IsSuccess);
-        Assert.True((await service.Delete(2)).IsSuccess);
+        Assert.True((await service.Delete(wholesalerId)).IsSuccess);
         var emptyAfterDelete = await service.GetAll();
-        Assert.Empty(emptyAfterDelete.Value);
-        Assert.Same(emptyAfterDelete.Value, (await service.GetAll()).Value);
-        var missing = await service.GetById(provider.Id);
+        Assert.Empty(emptyAfterDelete.Value.Objs);
+        Assert.Equal(0, emptyAfterDelete.Value.Count);
+        var missing = await service.GetById(providerId);
         Assert.True(missing.IsFailure);
         Assert.Equal(DomainErrorCode.NotFound, missing.Error.Code);
         Assert.Equal(DomainErrorCode.NotFound, (await service.Update(
-            provider.Id, new Proveedor { Id = provider.Id, Nombre = "Distribuidor" })).Error.Code);
-        Assert.Equal(DomainErrorCode.NotFound, (await service.Delete(provider.Id)).Error.Code);
+            providerId, new Proveedor { Id = providerId, Nombre = "Distribuidor" })).Error.Code);
+        Assert.Equal(DomainErrorCode.NotFound, (await service.Delete(providerId)).Error.Code);
     }
 
     private static FuncoDbContext CreateSqlContext()

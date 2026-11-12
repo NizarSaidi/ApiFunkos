@@ -18,4 +18,20 @@ public class ProveedorEntity
     /// <summary>Nombre del proveedor, almacenado como <c>name</c> en MongoDB.</summary>
     [BsonElement("name")]
     public string Nombre { get; set; }
+    
+    /// <summary>Fecha UTC de creación del registro.</summary>
+    [Column("createAt")]
+    public DateTime CreatedAt { get; set; }
+    
+    /// <summary>Fecha UTC de la última modificación.</summary>
+    [Column("updateAt")]
+    public DateTime UpdateAt { get; set; }
+    
+    /// <summary>Fecha UTC en que se marcó como eliminado; nula si sigue activo.</summary>
+    [Column("deleteAt")]
+    public DateTime? DeleteAt { get; set; }
+    
+    /// <summary>Indica si el registro se ha eliminado lógicamente.</summary>
+    [Column("isDeleted")]
+    public bool IsDeleted { get; set; }
 }

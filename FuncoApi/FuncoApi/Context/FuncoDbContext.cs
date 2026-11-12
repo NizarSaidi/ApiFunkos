@@ -20,6 +20,14 @@ public class FuncoDbContext(DbContextOptions<FuncoDbContext> options) : DbContex
 
             entity.HasIndex(f => f.Proveedor);
         });
+
+        modelBuilder.Entity<CategoriaEntity>(entity =>
+        {
+            entity.HasKey(categoria => categoria.Id);
+            entity.Property(categoria => categoria.Id)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("CONVERT(nvarchar(36), NEWID())");
+        });
     }
     /// <summary>Conjunto relacional de Funkos activos.</summary>
     public virtual DbSet<FunkoEntity> Funkos => Set<FunkoEntity>();

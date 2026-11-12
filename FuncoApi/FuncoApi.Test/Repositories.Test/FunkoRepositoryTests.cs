@@ -1,4 +1,5 @@
 using FuncoApi.Entity;
+using FuncoApi.Domain;
 using FuncoApi.Repositories;
 using Moq;
 
@@ -56,24 +57,45 @@ public class FunkoRepositoryTests
         context.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    /// <summary>Comprueba que el listado excluye entidades con borrado lógico.</summary>
+    /// <summary>Comprueba que el listado excluye borrados lógicos y limita resultados a la página solicitada.</summary>
     [Fact]
-    public async Task GetAllAsync_ExcludesSoftDeletedFunkos()
+    public async Task GetAllAsync_ExcludesSoftDeletedFunkosAndReturnsRequestedPage()
     {
         var data = new List<FunkoEntity>
         {
-            CreateFunko("Visible"),
-            new() { Id = 2, Nombre = "Deleted", IsDeleted = true }
+            CreateFunkoWithId(1),
+            new() { Id = 2, Nombre = "Deleted", IsDeleted = true },
+            CreateFunkoWithId(3)
         };
         var dbSet = RepositoryTestContext.CreateDbSet(data);
         var context = RepositoryTestContext.CreateContext();
         context.Setup(db => db.Funkos).Returns(dbSet.Object);
         var repository = new FunkoRepository(context.Object);
 
-        var result = await repository.GetAllAsync();
+        var result = await repository.GetAllAsync(page: 2, pageSize: 1);
 
-        Assert.Single(result);
-        Assert.Equal("Visible", result[0].Nombre);
+        Assert.True(result.IsSuccess);
+        Assert.Single(result.Value.Objs);
+        Assert.Equal(3, result.Value.Objs[0].Id);
+        Assert.Equal(2, result.Value.Count);
+    }
+
+    /// <summary>Comprueba que la paginación inválida devuelve validación sin acceder a la base de datos.</summary>
+    [Theory]
+    [InlineData(0, 10)]
+    [InlineData(1, 0)]
+    [InlineData(-1, 10)]
+    [InlineData(1, -1)]
+    public async Task GetAllAsync_ReturnsValidationError_WhenPaginationIsInvalid(int page, int pageSize)
+    {
+        var context = RepositoryTestContext.CreateContext();
+        context.Setup(db => db.Funkos).Throws(new InvalidOperationException("No debe consultar la base de datos."));
+        var repository = new FunkoRepository(context.Object);
+
+        var result = await repository.GetAllAsync(page, pageSize);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
     }
 
     /// <summary>Comprueba el borrado lógico, la ocultación posterior y el comportamiento para IDs ausentes.</summary>
@@ -192,4 +214,5 @@ public class FunkoRepositoryTests
         funko.Id = id;
         return funko;
     }
+
 }

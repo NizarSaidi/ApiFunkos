@@ -1,3 +1,5 @@
+using CSharpFunctionalExtensions;
+using FuncoApi.Domain;
 using FuncoApi.Entity;
 
 namespace FuncoApi.Context.Mongo;
@@ -5,9 +7,12 @@ namespace FuncoApi.Context.Mongo;
 /// <summary>Define las operaciones de acceso a documentos de proveedores en MongoDB.</summary>
 public interface IProveedorDataSource
 {
-    /// <summary>Obtiene todos los proveedores.</summary>
-    /// <returns>Lista de proveedores almacenados.</returns>
-    Task<IReadOnlyList<ProveedorEntity>> GetAllAsync();
+    /// <summary>Obtiene una página de proveedores y el total de documentos almacenados.</summary>
+    /// <param name="page">Número de página; la primera página es 1.</param>
+    /// <param name="pageSize">Número máximo de proveedores que devuelve la página.</param>
+    /// <returns>La página y el total, o un error de dominio si falla la consulta.</returns>
+    Task<Result<(IReadOnlyList<ProveedorEntity> Objs, int Count), DomainError>> GetAllAsync(
+        int page, int pageSize);
 
     /// <summary>Comprueba si ya existe un proveedor con el nombre indicado.</summary>
     /// <param name="name">Nombre que se quiere comprobar.</param>

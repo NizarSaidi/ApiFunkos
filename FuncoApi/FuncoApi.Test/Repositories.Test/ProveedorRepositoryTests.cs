@@ -1,6 +1,8 @@
 using FuncoApi.Context.Mongo;
+using FuncoApi.Domain;
 using FuncoApi.Entity;
 using FuncoApi.Repositories;
+using CSharpFunctionalExtensions;
 using FuncoApi.Repositories.proveedoresRepository;
 using Moq;
 
@@ -28,14 +30,18 @@ public class ProveedorRepositoryTests
             new() { Id = 2, Nombre = "Proveedor B" }
         };
 
-        _dataSource.Setup(ds => ds.GetAllAsync()).ReturnsAsync(proveedores);
+        _dataSource.Setup(ds => ds.GetAllAsync(1, 10))
+            .ReturnsAsync(Result.Success<(IReadOnlyList<ProveedorEntity> Objs, int Count), DomainError>(
+                (proveedores, 2)));
 
-        var result = await _repository.GetAllAsync();
+        var result = await _repository.GetAllAsync(page: 1, pageSize: 10);
 
-        Assert.Equal(2, result.Count);
-        Assert.Contains(result, p => p.Id == 1 && p.Nombre == "Proveedor A");
-        Assert.Contains(result, p => p.Id == 2 && p.Nombre == "Proveedor B");
-        _dataSource.Verify(ds => ds.GetAllAsync(), Times.Once);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Count);
+        Assert.Equal(2, result.Value.Objs.Count);
+        Assert.Contains(result.Value.Objs, p => p.Id == 1 && p.Nombre == "Proveedor A");
+        Assert.Contains(result.Value.Objs, p => p.Id == 2 && p.Nombre == "Proveedor B");
+        _dataSource.Verify(ds => ds.GetAllAsync(1, 10), Times.Once);
     }
 
     /// <summary>Comprueba que la búsqueda devuelve el proveedor existente.</summary>

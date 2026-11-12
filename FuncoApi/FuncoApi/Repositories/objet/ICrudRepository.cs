@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using CSharpFunctionalExtensions;
+using FuncoApi.Domain;
 
 namespace FuncoApi.Repositories;
 
@@ -7,9 +8,11 @@ namespace FuncoApi.Repositories;
 /// <typeparam name="TId">Tipo del identificador de la entidad.</typeparam>
 public interface ICrudRepository<T,TId>
 {
-    /// <summary>Obtiene todas las entidades visibles para el repositorio.</summary>
-    /// <returns>Una lista de solo lectura; puede estar vacía.</returns>
-    Task<IReadOnlyList<T>> GetAllAsync();
+    /// <summary>Obtiene una página de entidades junto con el total disponible.</summary>
+    /// <param name="page">Número de página a devolver; la primera es 1.</param>
+    /// <param name="pageSize">Número máximo de elementos por página.</param>
+    /// <returns>La página y el total, o un error de dominio si falla la consulta.</returns>
+    Task<Result<(IReadOnlyList<T> Objs, int Count), DomainError>> GetAllAsync(int page, int pageSize);
 
     /// <summary>Busca una entidad por su identificador.</summary>
     /// <param name="id">Identificador de la entidad.</param>

@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FuncoApi.Domain;
+using FuncoApi.Models;
 
 namespace FuncoApi.Services.objet;
 
@@ -8,9 +9,10 @@ namespace FuncoApi.Services.objet;
 /// <typeparam name="TId">Tipo del identificador del recurso.</typeparam>
 public interface IService<T, TId>
 {
-    /// <summary>Obtiene todos los modelos disponibles.</summary>
-    /// <returns>Un resultado con la lista de modelos o un error de dominio.</returns>
-    Task<Result<IReadOnlyList<T>, DomainError>> GetAll();
+    /// <summary>Obtiene una página de modelos junto con el número total disponible.</summary>
+    /// <param name="page">Número de página a devolver; la primera es 1.</param>
+    /// <returns>Un resultado con los modelos de la página y el total de registros.</returns>
+    Task<Result<(IReadOnlyList<T> Objs, int Count), DomainError>> GetAll(int page = 1);
 
     /// <summary>Obtiene un modelo por identificador.</summary>
     /// <param name="id">Identificador del modelo.</param>

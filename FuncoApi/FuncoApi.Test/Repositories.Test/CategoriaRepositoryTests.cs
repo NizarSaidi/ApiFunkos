@@ -1,3 +1,4 @@
+using FuncoApi.Domain;
 using FuncoApi.Entity;
 using FuncoApi.Repositories;
 using Moq;
@@ -21,30 +22,50 @@ public class CategoriaRepositoryTests
         var created = await repository.CreateAsync(categoria);
 
         Assert.NotNull(created);
-        Assert.Equal("anime", created.Id);
+        Assert.Null((string?)created.Id);
         Assert.Same(categoria, data.Single());
         context.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    /// <summary>Comprueba que el listado devuelve todas las categorías configuradas.</summary>
+    /// <summary>Comprueba que el listado devuelve la página de categorías solicitada.</summary>
     [Fact]
-    public async Task GetAllAsync_ReturnsAllCategorias()
+    public async Task GetAllAsync_ReturnsRequestedPage()
     {
         var data = new List<CategoriaEntity>
         {
             new() { Id = "anime", Nombre = "Anime" },
-            new() { Id = "serie", Nombre = "Serie" }
+            new() { Id = "serie", Nombre = "Serie" },
+            new() { Id = "videojuegos", Nombre = "Videojuegos" }
         };
         var dbSet = RepositoryTestContext.CreateDbSet(data);
         var context = RepositoryTestContext.CreateContext();
         context.Setup(db => db.Categorias).Returns(dbSet.Object);
         var repository = new CategoriaRepository(context.Object);
 
-        var result = await repository.GetAllAsync();
+        var result = await repository.GetAllAsync(page: 2, pageSize: 1);
 
-        Assert.Equal(2, result.Count());
-        Assert.Contains(result, item => item.Id == "anime");
-        Assert.Contains(result, item => item.Id == "serie");
+        Assert.True(result.IsSuccess);
+        Assert.Single(result.Value.Objs);
+        Assert.Contains(result.Value.Objs, item => item.Id == "serie");
+        Assert.Equal(3, result.Value.Count);
+    }
+
+    /// <summary>Comprueba que la paginación inválida devuelve validación sin acceder a la base de datos.</summary>
+    [Theory]
+    [InlineData(0, 10)]
+    [InlineData(1, 0)]
+    [InlineData(-1, 10)]
+    [InlineData(1, -1)]
+    public async Task GetAllAsync_ReturnsValidationError_WhenPaginationIsInvalid(int page, int pageSize)
+    {
+        var context = RepositoryTestContext.CreateContext();
+        context.Setup(db => db.Categorias).Throws(new InvalidOperationException("No debe consultar la base de datos."));
+        var repository = new CategoriaRepository(context.Object);
+
+        var result = await repository.GetAllAsync(page, pageSize);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
     }
 
     /// <summary>Comprueba que la búsqueda devuelve la categoría existente.</summary>
@@ -139,4 +160,5 @@ public class CategoriaRepositoryTests
 
         Assert.Null(deleted);
     }
+
 }

@@ -1,4 +1,6 @@
+using CSharpFunctionalExtensions;
 using FuncoApi.Context.Mongo;
+using FuncoApi.Domain;
 using FuncoApi.Entity;
 
 namespace FuncoApi.Repositories.proveedoresRepository;
@@ -15,9 +17,10 @@ public class ProveedorRepository : IProveedorRepository
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<ProveedorEntity>> GetAllAsync()
+    public Task<Result<(IReadOnlyList<ProveedorEntity> Objs, int Count), DomainError>> GetAllAsync(
+        int page, int pageSize)
     {
-        return await _dataSource.GetAllAsync();
+        return _dataSource.GetAllAsync(page, pageSize);
     }
 
     /// <inheritdoc />

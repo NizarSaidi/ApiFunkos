@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using FuncoApi.Cache.objet;
+using FuncoApi.Configure;
 using FuncoApi.Domain;
 using FuncoApi.Mappers;
 using FuncoApi.Models;
@@ -26,22 +27,29 @@ public class ProveedorService : IProveedorService
         _proveedorRepository = proveedorRepository;
     }
 
-    /// <summary>Obtiene todos los proveedores, usando la caché si existe una lista vigente.</summary>
-    /// <returns>Resultado con los proveedores o un error de dominio.</returns>
-    public async Task<Result<IReadOnlyList<Proveedor>, DomainError>> GetAll()
+    /// <summary>Obtiene una página de proveedores y el total, o devuelve errores de validación o consulta.</summary>
+    /// <param name="page">Número de página, empezando por 1.</param>
+    /// <returns>Resultado con los proveedores de la página y el total de proveedores.</returns>
+    public async Task<Result<(IReadOnlyList<Proveedor> Objs, int Count), DomainError>> GetAll(int page = 1)
     {
-        var cachedProveedores = await _cache.GetAsync<List<Proveedor>>(AllProveedoresCacheKey);
-        if (cachedProveedores is not null)
+        if (page <= 0)
         {
-            return Result.Success<IReadOnlyList<Proveedor>, DomainError>(cachedProveedores);
+            return Result.Failure<(IReadOnlyList<Proveedor> Objs, int Count), DomainError>(
+                Errors.Validation("El número de página debe ser mayor que cero."));
         }
 
-        var proveedores = (await _proveedorRepository.GetAllAsync())
+        var result = await _proveedorRepository.GetAllAsync(page, ConfigurationApp.PageSize);
+        if (result.IsFailure)
+        {
+            return Result.Failure<(IReadOnlyList<Proveedor> Objs, int Count), DomainError>(result.Error);
+        }
+
+        var proveedores = result.Value.Objs
             .Select(ProveedorMapper.ToModel)
             .ToList();
 
-        await _cache.SetAsync(AllProveedoresCacheKey, proveedores, CacheExpiration);
-        return Result.Success<IReadOnlyList<Proveedor>, DomainError>(proveedores);
+        return Result.Success<(IReadOnlyList<Proveedor> Objs, int Count), DomainError>(
+            (proveedores, result.Value.Count));
     }
 
     /// <summary>Busca un proveedor por su identificador y guarda el resultado en caché.</summary>
@@ -79,7 +87,7 @@ public class ProveedorService : IProveedorService
     /// <returns>El proveedor creado o un error de validación o persistencia.</returns>
     public async Task<Result<Proveedor, DomainError>> Create(Proveedor obj)
     {
-        var validationError = ProveedorValidator.Validate(obj);
+        var validationError = ProveedorValidator.Validate(obj, requireId: false);
         if (validationError is not null)
         {
             return Result.Failure<Proveedor, DomainError>(validationError);

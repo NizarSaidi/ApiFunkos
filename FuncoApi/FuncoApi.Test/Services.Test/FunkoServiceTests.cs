@@ -1,9 +1,11 @@
 using FuncoApi.Cache.objet;
+using FuncoApi.Configure;
 using FuncoApi.Domain;
 using FuncoApi.Entity;
 using FuncoApi.Models;
 using FuncoApi.Repositories;
 using FuncoApi.Services.FunkosService;
+using CSharpFunctionalExtensions;
 using Moq;
 
 namespace FuncoApi.Test.Services.Test;
@@ -11,6 +13,54 @@ namespace FuncoApi.Test.Services.Test;
 /// <summary>Comprueba validación, mapeo, errores e invalidación de caché del servicio de Funkos.</summary>
 public class FunkoServiceTests
 {
+    /// <summary>Comprueba que el servicio pasa el número de página y el tamaño configurado al repositorio.</summary>
+    [Fact]
+    public async Task GetAll_RequestsPageFromRepository()
+    {
+        var (service, repository, _) = CreateService();
+        repository.Setup(repo => repo.GetAllAsync(2, ConfigurationApp.PageSize))
+            .ReturnsAsync(Result.Success<(IReadOnlyList<FunkoEntity> Objs, int Count), DomainError>(
+                (new List<FunkoEntity> { new() { Id = 20, Nombre = "Página 2" } }, 21)));
+
+        var result = await service.GetAll(2);
+
+        Assert.True(result.IsSuccess);
+        var funko = Assert.Single(result.Value.Objs);
+        Assert.Equal(20, funko.Id);
+        Assert.Equal("Página 2", funko.Nombre);
+        Assert.Equal(21, result.Value.Count);
+        repository.Verify(repo => repo.GetAllAsync(2, ConfigurationApp.PageSize), Times.Once);
+    }
+
+    /// <summary>Comprueba que el servicio propaga el error de persistencia del repositorio.</summary>
+    [Fact]
+    public async Task GetAll_PropagatesRepositoryDomainError()
+    {
+        var (service, repository, _) = CreateService();
+        var error = Errors.PersistenceFailure("los Funkos");
+        repository.Setup(repo => repo.GetAllAsync(1, ConfigurationApp.PageSize))
+            .ReturnsAsync(Result.Failure<(IReadOnlyList<FunkoEntity> Objs, int Count), DomainError>(error));
+
+        var result = await service.GetAll();
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(error, result.Error);
+    }
+
+    /// <summary>Comprueba que una página inválida devuelve un error de dominio sin consultar persistencia.</summary>
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task GetAll_ReturnsValidationError_WhenPageIsNotPositive(int page)
+    {
+        var (service, repository, _) = CreateService();
+
+        var result = await service.GetAll(page);
+
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
+        repository.Verify(repo => repo.GetAllAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+    }
+
     /// <summary>Comprueba que la validación fallida evita llamar al repositorio.</summary>
     [Fact]
     public async Task Create_ReturnsValidationError_WithoutCallingRepository()
@@ -162,6 +212,34 @@ public class FunkoServiceTests
         var result = await service.Delete(3);
 
         Assert.Equal(DomainErrorCode.NotFound, result.Error.Code);
+    }
+
+    /// <summary>Comprueba que eliminar con un identificador inválido devuelve un error de validación.</summary>
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task Delete_ReturnsValidationError_WhenIdIsInvalid(int id)
+    {
+        var (service, repository, _) = CreateService();
+
+        var result = await service.Delete(id);
+
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
+        repository.Verify(repo => repo.DeleteAsync(It.IsAny<int>()), Times.Never);
+    }
+
+    /// <summary>Comprueba que actualizar con un identificador inválido devuelve un error de validación.</summary>
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task Update_ReturnsValidationError_WhenIdIsInvalid(int id)
+    {
+        var (service, repository, _) = CreateService();
+
+        var result = await service.Update(id, CreateValidFunko());
+
+        Assert.Equal(DomainErrorCode.Validation, result.Error.Code);
+        repository.Verify(repo => repo.UpdateAsync(It.IsAny<FunkoEntity>()), Times.Never);
     }
 
     /// <summary>Comprueba que un ID de ruta distinto al del modelo falla antes de persistir.</summary>

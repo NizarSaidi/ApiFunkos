@@ -1,3 +1,5 @@
+using CSharpFunctionalExtensions;
+using FuncoApi.Domain;
 using FuncoApi.Entity;
 using MongoDB.Driver;
 
@@ -6,18 +8,34 @@ namespace FuncoApi.Context.Mongo;
 /// <summary>Implementa el CRUD de proveedores mediante la colección de MongoDB.</summary>
 public class MongoProveedorDataSource : IProveedorDataSource
 {
+    private readonly MongoDbContext _context;
     private readonly IMongoCollection<ProveedorEntity> _collection;
 
     /// <summary>Obtiene la colección de proveedores desde el contexto Mongo.</summary>
     public MongoProveedorDataSource(MongoDbContext context)
     {
+        _context = context;
         _collection = context.Proveedores;
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<ProveedorEntity>> GetAllAsync()
+    public async Task<Result<(IReadOnlyList<ProveedorEntity> Objs, int Count), DomainError>> GetAllAsync(
+        int page, int pageSize)
     {
-        return await _collection.Find(_ => true).ToListAsync();
+        if (page <= 0 || pageSize <= 0)
+        {
+            return Result.Failure<(IReadOnlyList<ProveedorEntity> Objs, int Count), DomainError>(
+                Errors.Validation("La página y el tamaño de página deben ser mayores que cero."));
+        }
+
+        var proveedores = await _collection.Find(_ => true)
+            .Skip((page - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync();
+        var count = (int)await _collection.CountDocumentsAsync(_ => true);
+
+        return Result.Success<(IReadOnlyList<ProveedorEntity> Objs, int Count), DomainError>(
+            (proveedores, count));
     }
 
     /// <inheritdoc />
@@ -41,6 +59,7 @@ public class MongoProveedorDataSource : IProveedorDataSource
     /// <inheritdoc />
     public async Task<ProveedorEntity?> CreateAsync(ProveedorEntity obj)
     {
+        obj.Id = await _context.GetNextProveedorIdAsync();
         await _collection.InsertOneAsync(obj);
         return obj;
     }

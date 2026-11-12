@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FuncoApi.Cache.objet;
+using FuncoApi.Configure;
 using FuncoApi.Domain;
 using FuncoApi.Mappers;
 using FuncoApi.Models;
@@ -26,16 +27,28 @@ public class FunkoService : IFunkosService
         _funkoRepository = funkoRepository;
     }
 
-    /// <summary>Obtiene todos los Funkos activos, usando la caché si hay una lista disponible.</summary>
-    /// <returns>Resultado con la lista de modelos.</returns>
-    public async Task<Result<IReadOnlyList<Funko>, DomainError>> GetAll()
+    /// <summary>Obtiene una página de Funkos activos y el total, o devuelve errores de validación o consulta.</summary>
+    /// <param name="page">Número de página, empezando por 1.</param>
+    /// <returns>Resultado con los modelos de la página y el total de Funkos activos.</returns>
+    public async Task<Result<(IReadOnlyList<Funko> Objs, int Count), DomainError>> GetAll(int page = 1)
     {
-        var funkos = (await _funkoRepository.GetAllAsync())
+        if (page <= 0)
+        {
+            return Result.Failure<(IReadOnlyList<Funko> Objs, int Count), DomainError>(
+                Errors.Validation("El número de página debe ser mayor que cero."));
+        }
+
+        var result = await _funkoRepository.GetAllAsync(page, ConfigurationApp.PageSize);
+        if (result.IsFailure)
+        {
+            return Result.Failure<(IReadOnlyList<Funko> Objs, int Count), DomainError>(result.Error);
+        }
+
+        var funkos = result.Value.Objs
             .Select(FunkoMapper.ToModel)
             .ToList();
 
-        await _cache.SetAsync(AllFunkosCacheKey, funkos, CacheExpiration);
-        return Result.Success<IReadOnlyList<Funko>, DomainError>(funkos);
+        return Result.Success<(IReadOnlyList<Funko> Objs, int Count), DomainError>((funkos, result.Value.Count));
     }
 
     /// <summary>Obtiene un Funko activo por ID y guarda el resultado en caché.</summary>

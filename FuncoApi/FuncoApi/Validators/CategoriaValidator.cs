@@ -6,17 +6,18 @@ namespace FuncoApi.Validators;
 /// <summary>Aplica las reglas de dominio a los modelos de categoría.</summary>
 public static class CategoriaValidator
 {
-    /// <summary>Comprueba que la categoría tenga identificador y nombre.</summary>
+    /// <summary>Comprueba los campos obligatorios y, si corresponde, el identificador de categoría.</summary>
     /// <param name="categoria">Modelo que se va a validar; puede ser nulo.</param>
+    /// <param name="requireId">Indica si la operación requiere un ID ya asignado.</param>
     /// <returns><see langword="null"/> si es válido; en caso contrario, el primer error encontrado.</returns>
-    public static DomainError? Validate(Categoria? categoria)
+    public static DomainError? Validate(Categoria? categoria, bool requireId = true)
     {
         if (categoria is null)
         {
             return Errors.Validation("La categoría es obligatoria.");
         }
 
-        if (string.IsNullOrWhiteSpace(categoria.Id))
+        if (requireId && string.IsNullOrWhiteSpace(categoria.Id))
         {
             return Errors.Validation("El identificador de la categoría es obligatorio.");
         }
