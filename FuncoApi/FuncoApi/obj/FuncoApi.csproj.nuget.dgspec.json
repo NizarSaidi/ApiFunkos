@@ -24,6 +24,7 @@
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -38,10 +39,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "BCrypt.Net-Next": {
@@ -52,21 +54,29 @@
               "target": "Package",
               "version": "[3.7.0, )"
             },
+            "MailKit": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[10.0.15, )"
-            },
-            "Microsoft.AspNetCore.OpenApi": {
-              "target": "Package",
-              "version": "[10.0.1, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[10.0.1, )"
             },
+            "Microsoft.OpenApi": {
+              "target": "Package",
+              "version": "[3.11.0, )"
+            },
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[3.13.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[11.0.1, )"
             }
           },
           "imports": [
@@ -88,7 +98,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Users\\NIZAR\\.dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.404/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

@@ -16,6 +16,7 @@ public abstract class ApiControllerBase : ControllerBase
             DomainErrorCode.Validation => StatusCodes.Status400BadRequest,
             DomainErrorCode.NotFound => StatusCodes.Status404NotFound,
             DomainErrorCode.Conflict => StatusCodes.Status409Conflict,
+            DomainErrorCode.Unauthorized => StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError
         };
 

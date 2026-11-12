@@ -2,10 +2,13 @@
 using FuncoApi.Cache.objet;
 using FuncoApi.Configure;
 using FuncoApi.Domain;
+using FuncoApi.Email.service;
 using FuncoApi.Mappers;
 using FuncoApi.Models;
 using FuncoApi.Repositories;
+using FuncoApi.Repositories.userRepository;
 using FuncoApi.Validators;
+using Microsoft.Extensions.Logging;
 
 namespace FuncoApi.Services.FunkosService;
 
@@ -17,14 +20,28 @@ public class FunkoService : IFunkosService
 
     private readonly ICacheService _cache;
     private readonly IFunkoRepository _funkoRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IEmailService _emailService;
+    private readonly ILogger<FunkoService> _logger;
 
     /// <summary>Inicializa el servicio con sus dependencias de caché y persistencia.</summary>
     /// <param name="cache">Caché para resultados de Funkos.</param>
     /// <param name="funkoRepository">Repositorio de persistencia relacional.</param>
-    public FunkoService(ICacheService cache, IFunkoRepository funkoRepository)
+    /// <param name="userRepository">Repositorio que proporciona las direcciones de los usuarios activos.</param>
+    /// <param name="emailService">Servicio que envía avisos por correo.</param>
+    /// <param name="logger">Registrador de fallos de notificación.</param>
+    public FunkoService(
+        ICacheService cache,
+        IFunkoRepository funkoRepository,
+        IUserRepository userRepository,
+        IEmailService emailService,
+        ILogger<FunkoService> logger)
     {
         _cache = cache;
         _funkoRepository = funkoRepository;
+        _userRepository = userRepository;
+        _emailService = emailService;
+        _logger = logger;
     }
 
     /// <summary>Obtiene una página de Funkos activos y el total, o devuelve errores de validación o consulta.</summary>
@@ -105,7 +122,13 @@ public class FunkoService : IFunkosService
         }
 
         await _cache.RemoveAsync(AllFunkosCacheKey);
-        return Result.Success<Funko, DomainError>(FunkoMapper.ToModel(created));
+        var funko = FunkoMapper.ToModel(created);
+        await NotifyUsersAsync(
+            $"Nuevo Funko: {funko.Nombre}",
+            $"Se ha añadido un nuevo Funko al catálogo: {funko.Nombre}.",
+            funko.Id,
+            "crear");
+        return Result.Success<Funko, DomainError>(funko);
     }
 
     /// <summary>Valida y actualiza un Funko existente, invalidando sus entradas de caché.</summary>
@@ -168,7 +191,36 @@ public class FunkoService : IFunkosService
         }
 
         await InvalidateFunkoCache(id);
-        return Result.Success<Funko, DomainError>(FunkoMapper.ToModel(deleted));
+        var funko = FunkoMapper.ToModel(deleted);
+        await NotifyUsersAsync(
+            $"Funko eliminado: {funko.Nombre}",
+            $"Se ha eliminado del catálogo el Funko: {funko.Nombre}.",
+            funko.Id,
+            "eliminar");
+        return Result.Success<Funko, DomainError>(funko);
+    }
+
+    /// <summary>Notifica a los usuarios activos sin revertir un CRUD correcto si falla el correo.</summary>
+    private async Task NotifyUsersAsync(string subject, string body, int funkoId, string operation)
+    {
+        try
+        {
+            var recipients = await _userRepository.GetAllEmailsAsync();
+            if (recipients.Count == 0)
+            {
+                return;
+            }
+
+            await _emailService.SendEmailAsync(recipients, subject, body);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(
+                exception,
+                "No se pudo enviar el aviso de {Operation} del Funko {FunkoId}.",
+                operation,
+                funkoId);
+        }
     }
 
     /// <summary>Invalida la lista y la entrada de caché del Funko indicado.</summary>

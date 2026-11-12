@@ -4,6 +4,7 @@ using FuncoApi.Models;
 
 namespace FuncoApi.Mappers;
 
+/// <summary>Mapea usuarios entre modelos, entidades de persistencia y DTOs de autenticación.</summary>
 public static class UserMapper
 {
     /// <summary>Convierte los datos de creación en un modelo sin ID asignado.</summary>
@@ -11,6 +12,13 @@ public static class UserMapper
     {
         Id = Guid.Empty,
         Nombre = dto.Name,
+        Email = dto.Email,
+        Password = dto.Password
+    };
+
+    /// <summary>Convierte las credenciales de inicio de sesión en un modelo de usuario.</summary>
+    public static User ToModel(LogginDto dto) => new()
+    {
         Email = dto.Email,
         Password = dto.Password
     };

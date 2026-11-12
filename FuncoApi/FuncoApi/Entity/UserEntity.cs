@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FuncoApi.Entity;
 
+/// <summary>Registro de usuario persistido en la base de datos relacional.</summary>
 public class UserEntity
 {
     [Key]

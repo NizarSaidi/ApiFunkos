@@ -10,10 +10,12 @@
         "dependencies": {
           "BCrypt.Net-Next": "4.2.0",
           "CSharpFunctionalExtensions": "3.7.0",
+          "MailKit": "5.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.15",
-          "Microsoft.AspNetCore.OpenApi": "10.0.1",
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.1",
-          "MongoDB.Driver": "3.13.0"
+          "Microsoft.OpenApi": "3.11.0",
+          "MongoDB.Driver": "3.13.0",
+          "Swashbuckle.AspNetCore": "11.0.1"
         },
         "runtime": {
           "FuncoApi.dll": {}
@@ -69,6 +71,17 @@
           }
         }
       },
+      "MailKit/5.0.0": {
+        "dependencies": {
+          "MimeKit.Core": "5.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/MailKit.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.0.0"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/10.0.15": {
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.19.2"
@@ -77,17 +90,6 @@
           "lib/net10.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
             "assemblyVersion": "10.0.15.0",
             "fileVersion": "10.0.1526.53008"
-          }
-        }
-      },
-      "Microsoft.AspNetCore.OpenApi/10.0.1": {
-        "dependencies": {
-          "Microsoft.OpenApi": "2.0.0"
-        },
-        "runtime": {
-          "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll": {
-            "assemblyVersion": "10.0.1.0",
-            "fileVersion": "10.0.125.57005"
           }
         }
       },
@@ -329,11 +331,11 @@
           }
         }
       },
-      "Microsoft.OpenApi/2.0.0": {
+      "Microsoft.OpenApi/3.11.0": {
         "runtime": {
           "lib/net8.0/Microsoft.OpenApi.dll": {
-            "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.0.0.0"
+            "assemblyVersion": "3.11.0.0",
+            "fileVersion": "3.11.0.0"
           }
         }
       },
@@ -342,6 +344,14 @@
           "lib/netstandard2.0/Microsoft.SqlServer.Server.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "MimeKit.Core/5.0.0": {
+        "runtime": {
+          "lib/net10.0/MimeKit.Core.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.0.0"
           }
         }
       },
@@ -381,6 +391,43 @@
           "lib/net8.0/Snappier.dll": {
             "assemblyVersion": "1.3.1.0",
             "fileVersion": "1.3.1.0"
+          }
+        }
+      },
+      "Swashbuckle.AspNetCore/11.0.1": {
+        "dependencies": {
+          "Swashbuckle.AspNetCore.Swagger": "11.0.1",
+          "Swashbuckle.AspNetCore.SwaggerGen": "11.0.1",
+          "Swashbuckle.AspNetCore.SwaggerUI": "11.0.1"
+        }
+      },
+      "Swashbuckle.AspNetCore.Swagger/11.0.1": {
+        "dependencies": {
+          "Microsoft.OpenApi": "3.11.0"
+        },
+        "runtime": {
+          "lib/net10.0/Swashbuckle.AspNetCore.Swagger.dll": {
+            "assemblyVersion": "11.0.1.0",
+            "fileVersion": "11.0.1.3345"
+          }
+        }
+      },
+      "Swashbuckle.AspNetCore.SwaggerGen/11.0.1": {
+        "dependencies": {
+          "Swashbuckle.AspNetCore.Swagger": "11.0.1"
+        },
+        "runtime": {
+          "lib/net10.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {
+            "assemblyVersion": "11.0.1.0",
+            "fileVersion": "11.0.1.3345"
+          }
+        }
+      },
+      "Swashbuckle.AspNetCore.SwaggerUI/11.0.1": {
+        "runtime": {
+          "lib/net10.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
+            "assemblyVersion": "11.0.1.0",
+            "fileVersion": "11.0.1.3345"
           }
         }
       },
@@ -485,19 +532,19 @@
       "path": "dnsclient/1.6.1",
       "hashPath": "dnsclient.1.6.1.nupkg.sha512"
     },
+    "MailKit/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PG6hnsklTzd/iK9A6j03OxDOas9mh8zOBkbPzcsLmFOODE8Hw3HTy7HAKiJvVHXNpKc3/KMVG/4QvOAKCBbGhA==",
+      "path": "mailkit/5.0.0",
+      "hashPath": "mailkit.5.0.0.nupkg.sha512"
+    },
     "Microsoft.AspNetCore.Authentication.JwtBearer/10.0.15": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-Y8VbPrQuABpTkMrqO/K2URdfqBBheri/YDcB+sO530arpqsy7vsd/go/YfEP8XaRkACWPQV2gPxedl7dnxp0zg==",
       "path": "microsoft.aspnetcore.authentication.jwtbearer/10.0.15",
       "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.10.0.15.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.OpenApi/10.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-gMY53EggRIFawhue66GanHcm1Tcd0+QzzMwnMl60LrEoJhGgzA9qAbLx6t/ON3hX4flc2NcEbTK1Z5GCLYHcwA==",
-      "path": "microsoft.aspnetcore.openapi/10.0.1",
-      "hashPath": "microsoft.aspnetcore.openapi.10.0.1.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/8.0.0": {
       "type": "package",
@@ -611,12 +658,12 @@
       "path": "microsoft.identitymodel.tokens/8.19.2",
       "hashPath": "microsoft.identitymodel.tokens.8.19.2.nupkg.sha512"
     },
-    "Microsoft.OpenApi/2.0.0": {
+    "Microsoft.OpenApi/3.11.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-GGYLfzV/G/ct80OZ45JxnWP7NvMX1BCugn/lX7TH5o0lcVaviavsLMTxmFV2AybXWjbi3h6FF1vgZiTK6PXndw==",
-      "path": "microsoft.openapi/2.0.0",
-      "hashPath": "microsoft.openapi.2.0.0.nupkg.sha512"
+      "sha512": "sha512-kvQz+mL/fnDw2VaE8zMyQhbMv7FmOYUydIhCVNKxQdrLu9XiMT/07DHwJ5YkRO2uzcxTFvMAKFKKywxoyLKHcA==",
+      "path": "microsoft.openapi/3.11.0",
+      "hashPath": "microsoft.openapi.3.11.0.nupkg.sha512"
     },
     "Microsoft.SqlServer.Server/1.0.0": {
       "type": "package",
@@ -624,6 +671,13 @@
       "sha512": "sha512-N4KeF3cpcm1PUHym1RmakkzfkEv3GRMyofVv40uXsQhCQeglr2OHNcUk2WOG51AKpGO8ynGpo9M/kFXSzghwug==",
       "path": "microsoft.sqlserver.server/1.0.0",
       "hashPath": "microsoft.sqlserver.server.1.0.0.nupkg.sha512"
+    },
+    "MimeKit.Core/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0RLaVyex/BjUGqiw9xtGwzyCMaBcsu33Rth61bDCeVeQaaQK7tjcy4TA+nHKTqwUdp4OGd+gnhuq2fuR+c20qA==",
+      "path": "mimekit.core/5.0.0",
+      "hashPath": "mimekit.core.5.0.0.nupkg.sha512"
     },
     "MongoDB.Bson/3.13.0": {
       "type": "package",
@@ -652,6 +706,34 @@
       "sha512": "sha512-DOdDQiO8YZ5rBtVLY+6CmR1yp9WYoJRgEEktPBrR0tEj9QO2djA/zv0O3DX0OZpEAfosbY8pytQ9tQUogwQsEA==",
       "path": "snappier/1.3.1",
       "hashPath": "snappier.1.3.1.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore/11.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-udw95V+yj51HjaSs0+OiLYO9KrSylm2ebPH/7N41e8qQ+k/mCtXwiWaMbAW3kOPfE4yhe5sFOd1hNV+M8fXiqA==",
+      "path": "swashbuckle.aspnetcore/11.0.1",
+      "hashPath": "swashbuckle.aspnetcore.11.0.1.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.Swagger/11.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tTcRgM4wIEYZEHMUi0f3miviaIBrsmLtyT6Hl+cp3VBsMHkGbXgDal3QEOaMg6wU36radS2iXZakN7xMFt5u1w==",
+      "path": "swashbuckle.aspnetcore.swagger/11.0.1",
+      "hashPath": "swashbuckle.aspnetcore.swagger.11.0.1.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.SwaggerGen/11.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QRnhVGmkzSiD+9WAlYWfCjwD1erUjQjP1Y73Q2yaw0a5RqCvXsOMqyY7gyaSAIx/Q4TWmGpcAPjWk7Z6dPipAQ==",
+      "path": "swashbuckle.aspnetcore.swaggergen/11.0.1",
+      "hashPath": "swashbuckle.aspnetcore.swaggergen.11.0.1.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.SwaggerUI/11.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Mu0j015xm7W/Axz6J6bXrh+/qEiyUGQUIGrWWvivv732yO1LtnmyV3zRwWB1dOFvlrU/CWUZqIYe1+hIcsCacg==",
+      "path": "swashbuckle.aspnetcore.swaggerui/11.0.1",
+      "hashPath": "swashbuckle.aspnetcore.swaggerui.11.0.1.nupkg.sha512"
     },
     "System.ClientModel/1.5.1": {
       "type": "package",

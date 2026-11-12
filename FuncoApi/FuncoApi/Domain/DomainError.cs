@@ -9,6 +9,8 @@ public enum DomainErrorCode
     NotFound,
     /// <summary>La operación entra en conflicto con el estado existente.</summary>
     Conflict,
+    /// <summary>La autenticación no pudo completarse por credenciales inválidas.</summary>
+    Unauthorized,
     /// <summary>La persistencia no pudo completar la operación esperada.</summary>
     PersistenceFailure
 }

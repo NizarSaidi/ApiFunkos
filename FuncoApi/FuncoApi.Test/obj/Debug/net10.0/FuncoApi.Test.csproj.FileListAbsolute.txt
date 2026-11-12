@@ -178,7 +178,6 @@ C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\Funco
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\Castle.Core.dll
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\CSharpFunctionalExtensions.dll
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\DnsClient.dll
-C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\Microsoft.VisualStudio.CodeCoverage.Shim.dll
@@ -320,3 +319,8 @@ C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\Funco
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\obj\Debug\net10.0\ref\FuncoApi.Test.dll
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\BCrypt-Net-Next.dll
+C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\MailKit.dll
+C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\MimeKit.Core.dll
+C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\NIZAR\Documents\ESTUDIOS\EntornoServidor\Funko\ApiFunkos\FuncoApi\FuncoApi.Test\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll

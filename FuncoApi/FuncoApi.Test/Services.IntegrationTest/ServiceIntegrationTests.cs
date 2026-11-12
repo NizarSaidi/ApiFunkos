@@ -2,17 +2,21 @@ using FuncoApi.Cache;
 using FuncoApi.Context;
 using FuncoApi.Context.Mongo;
 using FuncoApi.Domain;
+using FuncoApi.Email.service;
 using FuncoApi.Entity;
 using FuncoApi.Models;
 using FuncoApi.Repositories;
 using FuncoApi.Repositories.proveedoresRepository;
+using FuncoApi.Repositories.userRepository;
 using FuncoApi.Services.CategoriaService;
 using FuncoApi.Services.FunkosService;
 using FuncoApi.Services.ProveedoresService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Mongo2Go;
+using Moq;
 
 namespace FuncoApi.Test.Services.IntegrationTest;
 
@@ -40,7 +44,13 @@ public class ServiceIntegrationTests : IAsyncLifetime
     {
         await using var context = CreateSqlContext();
         var cache = CreateCache();
-        var service = new FunkoService(cache, new FunkoRepository(context));
+        var service = new FunkoService(
+            cache,
+            new FunkoRepository(context),
+            Mock.Of<IUserRepository>(repository =>
+                repository.GetAllEmailsAsync() == Task.FromResult<IReadOnlyList<string>>(Array.Empty<string>())),
+            Mock.Of<IEmailService>(),
+            NullLogger<FunkoService>.Instance);
 
         var created = await service.Create(CreateValidFunko());
 

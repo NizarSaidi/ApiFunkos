@@ -50,6 +50,7 @@ public static class FunkoRoutes
             DomainErrorCode.Validation => Results.BadRequest(result.Error),
             DomainErrorCode.NotFound => Results.NotFound(result.Error),
             DomainErrorCode.Conflict => Results.Conflict(result.Error),
+            DomainErrorCode.Unauthorized => Results.Unauthorized(),
             _ => Results.Problem(result.Error.Message)
         };
     }

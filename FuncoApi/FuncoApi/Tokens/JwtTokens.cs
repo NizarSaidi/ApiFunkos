@@ -1,100 +1,107 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using FuncoApi.Models;
 using Microsoft.IdentityModel.Tokens;
-    
+using FunkoApi.Routes;
+using Microsoft.Extensions.Options;
+
 namespace FuncoApi.Tokens;
 
 
 /// <summary>
-/// Servicio para generacion y validacion de JWT tokens.
+/// Servicio para generación y validación de tokens JWT.
 /// </summary>
-public class JwtTokensService(IConfiguration configuration)
+public class JwtService : IJwtTokens
 {
-    private readonly string _secretKey = configuration["Jwt:Secret"]
-        ?? throw new InvalidOperationException("JWT Secret no configurado");
-    private readonly string _issuer = configuration["Jwt:Issuer"] ?? "ProductosApi";
-    private readonly string _audience = configuration["Jwt:Audience"] ?? "ProductosApiClients";
-    private readonly int _accessTokenExpiryMinutes = configuration.GetValue<int>("Jwt:ExpirationMinutes", 15);
-    private readonly int _refreshTokenExpiryDays = configuration.GetValue<int>("Jwt:RefreshTokenExpiryDays", 7);
+    private readonly JwtSettings _settings;
 
-    /// <summary>
-    /// Segundos de validez del access token (para ExpiresIn de AuthResponse).
-    /// </summary>
-    public int AccessTokenExpirySeconds => _accessTokenExpiryMinutes * 60;
-
-    /// <summary>
-    /// Genera un JWT access token para el usuario dado.
-    /// </summary>
-    public string GenerateToken(User user)
+    /// <summary>Inicializa el servicio con las opciones de configuración JWT.</summary>
+    /// <param name="settings">Emisor, audiencia, clave de firma y duración de los tokens.</param>
+    public JwtService(IOptions<JwtSettings> settings)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        _settings = settings.Value;
+    }
 
+    /// <inheritdoc />
+    public string GenerateToken(User usuario)
+    {
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Iat,
-                DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
-                ClaimValueTypes.Integer64),
-            new("username", user.Nombre),
-            new("role", user.Rol.ToString())
+            new(ClaimTypes.NameIdentifier,
+                usuario.Id.ToString()),
+
+            new(ClaimTypes.Name,
+                usuario.Nombre),
+
+            new(ClaimTypes.Role,
+                usuario.Rol)
         };
 
-        var token = new JwtSecurityToken(
-            issuer: _issuer,
-            audience: _audience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_accessTokenExpiryMinutes),
-            signingCredentials: creds
-        );
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(
+                _settings.Key));
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var credentials =
+            new SigningCredentials(
+                key,
+                SecurityAlgorithms.HmacSha256);
+
+        var token =
+            new JwtSecurityToken(
+                issuer: _settings.Issuer,
+                audience: _settings.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow
+                    .AddMinutes(
+                        _settings.DurationInMinutes),
+                signingCredentials:
+                credentials);
+
+        return new JwtSecurityTokenHandler()
+            .WriteToken(token);
     }
 
-    /// <summary>
-    /// Genera un refresh token aleatorio de 32 bytes.
-    /// </summary>
-    public string GenerateRefreshToken()
+    /// <inheritdoc />
+    public User? ValidateToken(string token)
     {
-        var randomNumber = new byte[32];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(randomNumber);
-        return Convert.ToBase64String(randomNumber)
-            .Replace("/", "_")
-            .Replace("+", "-");
-    }
-
-    /// <summary>
-    /// Valida un JWT token y devuelve el ClaimsPrincipal o null.
-    /// </summary>
-    public ClaimsPrincipal? ValidateToken(string token)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return null;
+        }
 
         try
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
-
-            var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+            var handler = new JwtSecurityTokenHandler();
+            var principal = handler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = _issuer,
+                ValidIssuer = _settings.Issuer,
                 ValidateAudience = true,
-                ValidAudience = _audience,
+                ValidAudience = _settings.Audience,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = key,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key)),
+                ValidateLifetime = true
             }, out _);
 
-            return principal;
+            var idValue = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(idValue, out var id))
+            {
+                return null;
+            }
+
+            return new User
+            {
+                Id = id,
+                Nombre = principal.FindFirstValue(ClaimTypes.Name) ?? string.Empty,
+                Rol = principal.FindFirstValue(ClaimTypes.Role) ?? string.Empty
+            };
         }
-        catch
+        catch (SecurityTokenException)
+        {
+            return null;
+        }
+        catch (ArgumentException)
         {
             return null;
         }

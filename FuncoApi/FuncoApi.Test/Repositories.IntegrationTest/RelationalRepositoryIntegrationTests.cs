@@ -1,6 +1,8 @@
 using FuncoApi.Context;
 using FuncoApi.Entity;
+using FuncoApi.Models;
 using FuncoApi.Repositories;
+using FuncoApi.Repositories.userRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace FuncoApi.Test.Repositories.IntegrationTest;
@@ -81,6 +83,52 @@ public class RelationalRepositoryIntegrationTests
         Assert.NotNull(deleted);
         Assert.Null(await repository.GetByIdAsync(second.Id));
         Assert.Equal(1, (await repository.GetAllAsync(1, 10)).Value.Count);
+    }
+
+    /// <summary>Comprueba el CRUD de usuarios y la unicidad que se mantiene tras el borrado lógico.</summary>
+    [Fact]
+    public async Task UserRepository_MapsCrudAndSoftDeletesUsers()
+    {
+        await using var context = CreateContext();
+        var repository = new UsuarioRepository(context);
+        var created = await repository.CreateAsync(new User
+        {
+            Nombre = "Ana",
+            Email = "ana@example.com",
+            Password = "hashed-password",
+            Rol = "User"
+        });
+
+        Assert.NotNull(created);
+        Assert.NotEqual(Guid.Empty, created.Id);
+        Assert.Equal(created.Id, (await repository.GetByIdAsync(created.Id))!.Id);
+        Assert.Equal("Ana", (await repository.GetByEmailAsync("ana@example.com"))!.Nombre);
+        Assert.True(await repository.ExistsByNameAsync("Ana"));
+        Assert.True(await repository.ExistsByEmailAsync("ana@example.com"));
+        Assert.Null(await repository.CreateAsync(new User
+        {
+            Nombre = "Ana",
+            Email = "other@example.com",
+            Password = "hashed-password",
+            Rol = "User"
+        }));
+
+        created.Nombre = "Ana actualizada";
+        created.Email = "ana.updated@example.com";
+        var updated = await repository.UpdateAsync(created);
+        Assert.NotNull(updated);
+        Assert.Equal("Ana actualizada", (await repository.GetByIdAsync(created.Id))!.Nombre);
+        Assert.False(await repository.ExistsByEmailAsync("ana@example.com"));
+
+        var deleted = await repository.DeleteAsync(created.Id.ToString());
+        Assert.NotNull(deleted);
+        Assert.Null(await repository.GetByIdAsync(created.Id));
+        Assert.Null(await repository.GetByEmailAsync("ana.updated@example.com"));
+        Assert.True(await repository.ExistsByNameAsync("Ana actualizada"));
+        Assert.True(await repository.ExistsByEmailAsync("ana.updated@example.com"));
+        Assert.Empty(await repository.GetAllEmailsAsync());
+        Assert.Null(await repository.DeleteAsync(created.Id.ToString()));
+        Assert.Null(await repository.UpdateAsync(created));
     }
 
     private static FuncoDbContext CreateContext()

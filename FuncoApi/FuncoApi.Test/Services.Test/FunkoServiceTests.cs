@@ -1,11 +1,14 @@
 using FuncoApi.Cache.objet;
 using FuncoApi.Configure;
 using FuncoApi.Domain;
+using FuncoApi.Email.service;
 using FuncoApi.Entity;
 using FuncoApi.Models;
 using FuncoApi.Repositories;
+using FuncoApi.Repositories.userRepository;
 using FuncoApi.Services.FunkosService;
 using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace FuncoApi.Test.Services.Test;
@@ -98,6 +101,71 @@ public class FunkoServiceTests
             entity.Categoria == funko.Categoria &&
             entity.Proveedor == funko.Proveedor)), Times.Once);
         cache.Verify(service => service.RemoveAsync("funkos:all"), Times.Once);
+    }
+
+    /// <summary>Comprueba que al crear un Funko se envía un aviso a los correos de usuarios activos.</summary>
+    [Fact]
+    public async Task Create_NotifiesAllUsersAfterSuccessfulCreation()
+    {
+        var repository = new Mock<IFunkoRepository>();
+        var userRepository = new Mock<IUserRepository>();
+        var emailService = new Mock<IEmailService>();
+        var cache = new Mock<ICacheService>();
+        var recipients = new[] { "ana@example.com", "luis@example.com" };
+        userRepository.Setup(users => users.GetAllEmailsAsync()).ReturnsAsync(recipients);
+        repository.Setup(repo => repo.CreateAsync(It.IsAny<FunkoEntity>()))
+            .ReturnsAsync((FunkoEntity entity) =>
+            {
+                entity.Id = 12;
+                return entity;
+            });
+        var service = new FunkoService(
+            cache.Object,
+            repository.Object,
+            userRepository.Object,
+            emailService.Object,
+            NullLogger<FunkoService>.Instance);
+
+        var result = await service.Create(CreateValidFunko());
+
+        Assert.True(result.IsSuccess);
+        emailService.Verify(email => email.SendEmailAsync(
+            It.Is<IReadOnlyCollection<string>>(addresses => addresses.SequenceEqual(recipients)),
+            "Nuevo Funko: Funko",
+            "Se ha añadido un nuevo Funko al catálogo: Funko."), Times.Once);
+    }
+
+    /// <summary>Comprueba que si falla el correo, la creación persiste y se devuelve correctamente.</summary>
+    [Fact]
+    public async Task Create_ReturnsSuccess_WhenNotificationFails()
+    {
+        var repository = new Mock<IFunkoRepository>();
+        var userRepository = new Mock<IUserRepository>();
+        var emailService = new Mock<IEmailService>();
+        var recipients = new[] { "ana@example.com" };
+        userRepository.Setup(users => users.GetAllEmailsAsync()).ReturnsAsync(recipients);
+        repository.Setup(repo => repo.CreateAsync(It.IsAny<FunkoEntity>()))
+            .ReturnsAsync((FunkoEntity entity) =>
+            {
+                entity.Id = 12;
+                return entity;
+            });
+        emailService.Setup(email => email.SendEmailAsync(
+                It.IsAny<IReadOnlyCollection<string>>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+            .ThrowsAsync(new InvalidOperationException("SMTP no disponible."));
+        var service = new FunkoService(
+            Mock.Of<ICacheService>(),
+            repository.Object,
+            userRepository.Object,
+            emailService.Object,
+            NullLogger<FunkoService>.Instance);
+
+        var result = await service.Create(CreateValidFunko());
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(12, result.Value.Id);
     }
 
     /// <summary>Comprueba que no se persiste un Funko si ya hay otro con el mismo nombre.</summary>
@@ -214,6 +282,33 @@ public class FunkoServiceTests
         Assert.Equal(DomainErrorCode.NotFound, result.Error.Code);
     }
 
+    /// <summary>Comprueba que eliminar un Funko envía el aviso a los usuarios.</summary>
+    [Fact]
+    public async Task Delete_NotifiesAllUsersAfterSuccessfulDeletion()
+    {
+        var repository = new Mock<IFunkoRepository>();
+        var userRepository = new Mock<IUserRepository>();
+        var emailService = new Mock<IEmailService>();
+        userRepository.Setup(users => users.GetAllEmailsAsync())
+            .ReturnsAsync(new[] { "ana@example.com" });
+        repository.Setup(repo => repo.DeleteAsync(12))
+            .ReturnsAsync(new FunkoEntity { Id = 12, Nombre = "Funko eliminado" });
+        var service = new FunkoService(
+            Mock.Of<ICacheService>(),
+            repository.Object,
+            userRepository.Object,
+            emailService.Object,
+            NullLogger<FunkoService>.Instance);
+
+        var result = await service.Delete(12);
+
+        Assert.True(result.IsSuccess);
+        emailService.Verify(email => email.SendEmailAsync(
+            It.Is<IReadOnlyCollection<string>>(addresses => addresses.SequenceEqual(new[] { "ana@example.com" })),
+            "Funko eliminado: Funko eliminado",
+            "Se ha eliminado del catálogo el Funko: Funko eliminado."), Times.Once);
+    }
+
     /// <summary>Comprueba que eliminar con un identificador inválido devuelve un error de validación.</summary>
     [Theory]
     [InlineData(0)]
@@ -267,7 +362,20 @@ public class FunkoServiceTests
             .Setup(service => service.RemoveAsync(It.IsAny<string>()))
             .Returns(Task.CompletedTask);
 
-        return (new FunkoService(cache.Object, repository.Object), repository, cache);
+        var userRepository = new Mock<IUserRepository>();
+        userRepository.Setup(users => users.GetAllEmailsAsync())
+            .ReturnsAsync(Array.Empty<string>());
+        var emailService = new Mock<IEmailService>();
+
+        return (
+            new FunkoService(
+                cache.Object,
+                repository.Object,
+                userRepository.Object,
+                emailService.Object,
+                NullLogger<FunkoService>.Instance),
+            repository,
+            cache);
     }
 
     /// <summary>Construye un Funko que satisface las reglas de validación del servicio.</summary>

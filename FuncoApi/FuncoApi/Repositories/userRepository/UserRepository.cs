@@ -6,64 +6,113 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FuncoApi.Repositories.userRepository;
 
+/// <summary>Implementa la persistencia relacional de usuarios mediante Entity Framework Core.</summary>
 public class UsuarioRepository : IUserRepository
 {
     private readonly FuncoDbContext _context;
 
+    /// <summary>Inicializa el repositorio con el contexto relacional de la aplicación.</summary>
+    /// <param name="context">Contexto que permite consultar y guardar usuarios.</param>
     public UsuarioRepository(FuncoDbContext context)
     {
         _context = context;
     }
 
-    public async Task<UserEntity?> GetByEmailAsync(string email)
+    /// <inheritdoc />
+    public async Task<User?> GetByEmailAsync(string email)
     {
-        return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email && !u.IsDeleted);
+        return usuario is null ? null : UserMapper.ToModel(usuario);
     }
 
-    public async Task<UserEntity?> GetByIdAsync(Guid id)
+    /// <inheritdoc />
+    public async Task<bool> ExistsByNameAsync(string name)
     {
-        return await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
+        return await _context.Usuarios.AnyAsync(u => u.Nombre == name);
     }
 
-    public async Task<UserEntity> CreateAsync(UserEntity usuario)
+    /// <inheritdoc />
+    public async Task<bool> ExistsByEmailAsync(string email)
     {
+        return await _context.Usuarios.AnyAsync(u => u.Email == email);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<string>> GetAllEmailsAsync()
+    {
+        return await _context.Usuarios
+            .Where(usuario => !usuario.IsDeleted && usuario.Email != "")
+            .Select(usuario => usuario.Email)
+            .ToListAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task<User?> GetByIdAsync(Guid id)
+    {
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
+        return usuario is null ? null : UserMapper.ToModel(usuario);
+    }
+
+    /// <inheritdoc />
+    public async Task<User?> CreateAsync(User usuario)
+    {
+        if (await ExistsByEmailAsync(usuario.Email))
+        {
+            return null;
+        }
+
+        if (await ExistsByNameAsync(usuario.Nombre))
+        {
+            return null;
+        }
         
-        usuario.Id = Guid.Empty;
-        usuario.IsDeleted = false; 
-        usuario.DeleteAt = null;
-        usuario.CreatedAt = DateTime.UtcNow; 
-        usuario.UpdateAt = usuario.CreatedAt;
-        await _context.Usuarios.AddAsync(usuario);
+        var entity = UserMapper.ToEntity(usuario);
+        entity.Id = Guid.Empty;
+        entity.IsDeleted = false;
+        entity.DeleteAt = null;
+        entity.CreatedAt = DateTime.UtcNow;
+        entity.UpdateAt = entity.CreatedAt;
+        await _context.Usuarios.AddAsync(entity);
 
         await _context.SaveChangesAsync();
         
-        return usuario;
+        return UserMapper.ToModel(entity);
     }
 
-    public Task<UserEntity> UpdateAsync(UserEntity usuario)
+    /// <inheritdoc />
+    public async Task<User?> UpdateAsync(User usuario)
     {
-        usuario.UpdateAt = DateTime.UtcNow;
-        _context.Usuarios.Update(usuario);
+        var entity = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == usuario.Id && !u.IsDeleted);
+        if (entity is null)
+        {
+            return null;
+        }
 
-        _context.SaveChanges();
+        entity.Nombre = usuario.Nombre;
+        entity.Email = usuario.Email;
+        entity.Password = usuario.Password;
+        entity.Rol = usuario.Rol;
+        entity.UpdateAt = DateTime.UtcNow;
 
-        return Task.FromResult(usuario);
+        await _context.SaveChangesAsync();
+
+        return UserMapper.ToModel(entity);
     }
 
-    public Task DeleteAsync(string id)
+    /// <inheritdoc />
+    public async Task<User?> DeleteAsync(string id)
     {
-        var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == Guid.Parse(id));
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == Guid.Parse(id) && !u.IsDeleted);
         if (usuario == null)
         {
-            throw new InvalidOperationException("User not found");
+            return null;
         }
         
         usuario.IsDeleted = true;
         usuario.DeleteAt = DateTime.UtcNow;
         usuario.UpdateAt = DateTime.UtcNow;
-        _context.Usuarios.Update(usuario);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
-        return Task.CompletedTask;
+        return UserMapper.ToModel(usuario);
     }
 }
