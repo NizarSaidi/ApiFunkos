@@ -14,6 +14,7 @@ public class FuncoDbContext(DbContextOptions<FuncoDbContext> options) : DbContex
         {
             entity.HasKey(f => f.Id);
             entity.Property(f => f.Id).ValueGeneratedOnAdd();
+            entity.Property(f => f.Precio).HasPrecision(18, 2);
             entity.HasQueryFilter(f => !f.IsDeleted);
 
             entity.HasIndex(f => f.Categoria);

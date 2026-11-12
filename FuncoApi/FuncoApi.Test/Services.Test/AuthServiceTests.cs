@@ -5,6 +5,8 @@ using FuncoApi.Models;
 using FuncoApi.Repositories.userRepository;
 using FuncoApi.Services.Authorification;
 using FuncoApi.Tokens;
+using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace FuncoApi.Test.Services.Test;
@@ -18,7 +20,11 @@ public class AuthServiceTests
 
     public AuthServiceTests()
     {
-        _service = new AuthService(_repository.Object, _jwtTokens.Object, _emailService.Object);
+        _service = new AuthService(
+            _repository.Object,
+            _jwtTokens.Object,
+            _emailService.Object,
+            NullLogger<AuthService>.Instance);
     }
 
     [Fact]
@@ -138,5 +144,35 @@ public class AuthServiceTests
 
         Assert.True(result.IsFailure);
         Assert.Equal(DomainErrorCode.Unauthorized, result.Error.Code);
+    }
+
+    /// <summary>Comprueba que un fallo SMTP no impide iniciar sesión con credenciales válidas.</summary>
+    [Fact]
+    public async Task LoginAsync_SucceedsWhenNotificationEmailFails()
+    {
+        _repository.Setup(repository => repository.GetByEmailAsync("ana@example.com"))
+            .ReturnsAsync(new User
+            {
+                Email = "ana@example.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("correct"),
+                Nombre = "Ana",
+                Rol = "User"
+            });
+        _jwtTokens.Setup(tokens => tokens.GenerateToken(It.IsAny<User>()))
+            .Returns("jwt-token");
+        _emailService.Setup(service => service.SendEmailAsync(
+                "ana@example.com",
+                "Bienvenido de nuevo",
+                It.IsAny<string>()))
+            .ThrowsAsync(new SmtpProtocolException("SMTP server disconnected"));
+
+        var result = await _service.LoginAsync(new LogginDto
+        {
+            Email = "ana@example.com",
+            Password = "correct"
+        });
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("jwt-token", result.Value.Token);
     }
 }

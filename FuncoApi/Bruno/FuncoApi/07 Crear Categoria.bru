@@ -1,0 +1,37 @@
+meta {
+  name: Crear Categoria
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/categorias
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nombre": "Bruno categoria {{testRunId}}"
+  }
+}
+
+script:post-response {
+  bru.setVar("categoryId", res.getBody().id);
+}
+
+tests {
+  test("Crea una categoría y devuelve su identificador", function() {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().id).to.be.a("string").and.not.empty;
+    expect(res.getBody().nombre).to.equal("Bruno categoria " + bru.getVar("testRunId"));
+  });
+}

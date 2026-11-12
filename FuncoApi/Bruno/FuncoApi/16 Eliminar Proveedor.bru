@@ -1,0 +1,18 @@
+meta {
+  name: Eliminar Proveedor
+  type: http
+  seq: 16
+}
+
+delete {
+  url: {{baseUrl}}/api/proveedores/{{providerId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Elimina el proveedor creado", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().id).to.equal(bru.getVar("providerId"));
+  });
+}

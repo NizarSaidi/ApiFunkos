@@ -1,0 +1,1318 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FuncoApi</name>
+    </assembly>
+    <members>
+        <member name="T:FuncoApi.Cache.MemoryCacheService">
+            <summary>Implementa <see cref="T:FuncoApi.Cache.objet.ICacheService"/> usando la caché local en memoria.</summary>
+        </member>
+        <member name="M:FuncoApi.Cache.MemoryCacheService.#ctor(Microsoft.Extensions.Caching.Memory.IMemoryCache)">
+            <summary>Crea el adaptador para una caché de memoria de ASP.NET Core.</summary>
+        </member>
+        <member name="M:FuncoApi.Cache.MemoryCacheService.GetAsync``1(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Cache.MemoryCacheService.SetAsync``1(System.String,``0,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Cache.MemoryCacheService.RemoveAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Cache.objet.ICacheService">
+            <summary>Abstracción asíncrona para almacenar valores genéricos con caducidad.</summary>
+        </member>
+        <member name="M:FuncoApi.Cache.objet.ICacheService.GetAsync``1(System.String)">
+            <summary>Obtiene el valor asociado a una clave.</summary>
+            <typeparam name="T">Tipo esperado del valor.</typeparam>
+            <param name="key">Clave de caché.</param>
+            <returns>El valor almacenado o el valor predeterminado si no existe.</returns>
+        </member>
+        <member name="M:FuncoApi.Cache.objet.ICacheService.SetAsync``1(System.String,``0,System.TimeSpan)">
+            <summary>Guarda un valor con una duración relativa.</summary>
+            <typeparam name="T">Tipo del valor almacenado.</typeparam>
+            <param name="key">Clave de caché.</param>
+            <param name="value">Valor que se va a guardar.</param>
+            <param name="expiration">Tiempo hasta que la entrada expire.</param>
+        </member>
+        <member name="M:FuncoApi.Cache.objet.ICacheService.RemoveAsync(System.String)">
+            <summary>Elimina una entrada de caché.</summary>
+            <param name="key">Clave de la entrada que se va a eliminar.</param>
+        </member>
+        <member name="T:FuncoApi.Cache.RedisCacheService">
+            <summary>Implementa <see cref="T:FuncoApi.Cache.objet.ICacheService"/> serializando valores sobre <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/>.</summary>
+        </member>
+        <member name="M:FuncoApi.Cache.RedisCacheService.#ctor(Microsoft.Extensions.Caching.Distributed.IDistributedCache)">
+            <summary>Crea el adaptador para una caché distribuida.</summary>
+        </member>
+        <member name="M:FuncoApi.Cache.RedisCacheService.GetAsync``1(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Cache.RedisCacheService.SetAsync``1(System.String,``0,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Cache.RedisCacheService.RemoveAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Configure.ConfigurationApp">
+            <summary>Proporciona la configuración del entorno de ejecución.</summary>
+        </member>
+        <member name="P:FuncoApi.Configure.ConfigurationApp.Mode">
+            <summary>Entorno ASP.NET Core activo, con <c>Development</c> como valor predeterminado.</summary>
+        </member>
+        <member name="P:FuncoApi.Configure.ConfigurationApp.PageSize">
+            <summary> Retorna el tamaño de página.</summary>
+        </member>
+        <member name="T:FuncoApi.Context.FuncoDbContext">
+            <summary>Contexto EF Core para las entidades relacionales de la API.</summary>
+        </member>
+        <member name="M:FuncoApi.Context.FuncoDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{FuncoApi.Context.FuncoDbContext})">
+            <summary>Contexto EF Core para las entidades relacionales de la API.</summary>
+        </member>
+        <member name="M:FuncoApi.Context.FuncoDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>Configura claves, índices y el filtro global de borrado lógico de Funkos.</summary>
+        </member>
+        <member name="P:FuncoApi.Context.FuncoDbContext.Funkos">
+            <summary>Conjunto relacional de Funkos activos.</summary>
+        </member>
+        <member name="P:FuncoApi.Context.FuncoDbContext.Categorias">
+            <summary>Conjunto relacional de categorías.</summary>
+        </member>
+        <member name="P:FuncoApi.Context.FuncoDbContext.Usuarios">
+            <summary>Conjunto de usuarios definido por el modelo de persistencia.</summary>
+        </member>
+        <member name="T:FuncoApi.Context.Mongo.IMongoDbContext">
+            <summary>Expone las colecciones MongoDB requeridas por el acceso a proveedores.</summary>
+        </member>
+        <member name="P:FuncoApi.Context.Mongo.IMongoDbContext.Proveedores">
+            <summary>Colección MongoDB de proveedores.</summary>
+        </member>
+        <member name="T:FuncoApi.Context.Mongo.InMemoryProveedorDataSource">
+            <summary>Implementa el almacenamiento temporal de proveedores en memoria.</summary>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.InMemoryProveedorDataSource.GetAllAsync(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.InMemoryProveedorDataSource.ExistsByNameAsync(System.String,System.Nullable{System.Int32})">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.InMemoryProveedorDataSource.GetByIdAsync(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.InMemoryProveedorDataSource.CreateAsync(FuncoApi.Entity.ProveedorEntity)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.InMemoryProveedorDataSource.DeleteAsync(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.InMemoryProveedorDataSource.UpdateAsync(FuncoApi.Entity.ProveedorEntity)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Context.Mongo.IProveedorDataSource">
+            <summary>Define las operaciones de acceso a documentos de proveedores en MongoDB.</summary>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.IProveedorDataSource.GetAllAsync(System.Int32,System.Int32)">
+            <summary>Obtiene una página de proveedores y el total de documentos almacenados.</summary>
+            <param name="page">Número de página; la primera página es 1.</param>
+            <param name="pageSize">Número máximo de proveedores que devuelve la página.</param>
+            <returns>La página y el total, o un error de dominio si falla la consulta.</returns>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.IProveedorDataSource.ExistsByNameAsync(System.String,System.Nullable{System.Int32})">
+            <summary>Comprueba si ya existe un proveedor con el nombre indicado.</summary>
+            <param name="name">Nombre que se quiere comprobar.</param>
+            <param name="excludedId">ID que se excluye al comprobar una actualización.</param>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.IProveedorDataSource.GetByIdAsync(System.Int32)">
+            <summary>Busca un proveedor por identificador.</summary>
+            <param name="id">Identificador del proveedor.</param>
+            <returns>El proveedor encontrado o <see langword="null"/>.</returns>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.IProveedorDataSource.CreateAsync(FuncoApi.Entity.ProveedorEntity)">
+            <summary>Inserta un proveedor.</summary>
+            <param name="obj">Documento que se va a insertar.</param>
+            <returns>El documento insertado.</returns>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.IProveedorDataSource.DeleteAsync(System.Int32)">
+            <summary>Elimina un proveedor por identificador.</summary>
+            <param name="id">Identificador del proveedor que se va a eliminar.</param>
+            <returns>El proveedor eliminado o <see langword="null"/>.</returns>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.IProveedorDataSource.UpdateAsync(FuncoApi.Entity.ProveedorEntity)">
+            <summary>Reemplaza un proveedor existente.</summary>
+            <param name="obj">Documento con el identificador y los nuevos valores.</param>
+            <returns>El documento actualizado o <see langword="null"/> si no existe.</returns>
+        </member>
+        <member name="T:FuncoApi.Context.Mongo.MongoDbContext">
+            <summary>Crea el cliente MongoDB y expone la colección de proveedores configurada.</summary>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.MongoDbContext.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>Inicializa la conexión a partir de las claves <c>MongoSettings</c> de configuración.</summary>
+            <param name="config">Configuración de la aplicación con la conexión y la base de datos.</param>
+            <exception cref="T:System.InvalidOperationException">Falta la cadena de conexión o el nombre de la base.</exception>
+        </member>
+        <member name="P:FuncoApi.Context.Mongo.MongoDbContext.Proveedores">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.MongoDbContext.GetNextProveedorIdAsync">
+            <summary>Obtiene atómicamente el siguiente identificador entero para un proveedor.</summary>
+        </member>
+        <member name="T:FuncoApi.Context.Mongo.MongoProveedorDataSource">
+            <summary>Implementa el CRUD de proveedores mediante la colección de MongoDB.</summary>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.MongoProveedorDataSource.#ctor(FuncoApi.Context.Mongo.MongoDbContext)">
+            <summary>Obtiene la colección de proveedores desde el contexto Mongo.</summary>
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.MongoProveedorDataSource.GetAllAsync(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.MongoProveedorDataSource.ExistsByNameAsync(System.String,System.Nullable{System.Int32})">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.MongoProveedorDataSource.GetByIdAsync(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.MongoProveedorDataSource.CreateAsync(FuncoApi.Entity.ProveedorEntity)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.MongoProveedorDataSource.DeleteAsync(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Context.Mongo.MongoProveedorDataSource.UpdateAsync(FuncoApi.Entity.ProveedorEntity)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Context.Mongo.MongoSettings">
+            <summary>Opciones de conexión y nombre de base de datos para MongoDB.</summary>
+        </member>
+        <member name="P:FuncoApi.Context.Mongo.MongoSettings.ConnectionString">
+            <summary>Cadena de conexión del servidor MongoDB.</summary>
+        </member>
+        <member name="P:FuncoApi.Context.Mongo.MongoSettings.DatabaseName">
+            <summary>Base de datos que contiene la colección de proveedores.</summary>
+        </member>
+        <member name="T:FuncoApi.Controlers.ApiControllerBase">
+            <summary>Proporciona la conversión común de errores de dominio a respuestas HTTP.</summary>
+        </member>
+        <member name="M:FuncoApi.Controlers.ApiControllerBase.ToHttpError(FuncoApi.Domain.DomainError)">
+            <summary>Convierte un error de dominio al código HTTP correspondiente.</summary>
+            <param name="error">Error que devolvió el servicio.</param>
+            <returns>Respuesta HTTP con los detalles del error.</returns>
+        </member>
+        <member name="T:FuncoApi.Controlers.AuthController">
+            <summary>Expone los endpoints HTTP de registro e inicio de sesión.</summary>
+        </member>
+        <member name="M:FuncoApi.Controlers.AuthController.#ctor(FuncoApi.Services.Authorification.IAuthService)">
+            <summary>Inicializa el controlador con el servicio de autenticación.</summary>
+            <param name="service">Servicio que procesa el registro y el inicio de sesión.</param>
+        </member>
+        <member name="T:FuncoApi.Controlers.CategoriasControler">
+            <summary>Expone las operaciones HTTP CRUD de categorías.</summary>
+        </member>
+        <member name="M:FuncoApi.Controlers.CategoriasControler.#ctor(FuncoApi.Services.CategoriaService.ICategoriaService)">
+            <summary>Inicializa el controlador con el servicio de categorías.</summary>
+            <param name="service">Servicio de aplicación de categorías.</param>
+        </member>
+        <member name="M:FuncoApi.Controlers.CategoriasControler.GetAll(System.Int32)">
+            <summary>Obtiene una página de categorías y sus metadatos de paginación.</summary>
+            <param name="page">Página solicitada, empezando por 1.</param>
+            <returns>La página, el total y los metadatos o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.CategoriasControler.GetById(System.String)">
+            <summary>Busca una categoría por su identificador.</summary>
+            <param name="id">Identificador textual de la categoría.</param>
+            <returns>La categoría o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.CategoriasControler.Create(FuncoApi.Dto.CategoriaDto.CategoriaCreateDto)">
+            <summary>Crea una categoría y devuelve el ID generado por la base de datos.</summary>
+            <param name="request">Datos de la categoría que se va a crear.</param>
+            <returns>La categoría creada o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.CategoriasControler.Update(System.String,FuncoApi.Dto.CategoriaDto.CategoriaUpdateDto)">
+            <summary>Actualiza el nombre de una categoría existente.</summary>
+            <param name="id">Identificador de la categoría que se va a actualizar.</param>
+            <param name="request">Nuevo nombre.</param>
+            <returns>La categoría actualizada o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.CategoriasControler.Delete(System.String)">
+            <summary>Elimina una categoría por su identificador.</summary>
+            <param name="id">Identificador de la categoría que se va a eliminar.</param>
+            <returns>La categoría eliminada o un error de dominio.</returns>
+        </member>
+        <member name="T:FuncoApi.Controlers.FunkosControler">
+            <summary>Expone las operaciones HTTP CRUD de Funkos.</summary>
+        </member>
+        <member name="M:FuncoApi.Controlers.FunkosControler.#ctor(FuncoApi.Services.FunkosService.IFunkosService)">
+            <summary>Inicializa el controlador con el servicio de Funkos.</summary>
+            <param name="service">Servicio de aplicación de Funkos.</param>
+        </member>
+        <member name="M:FuncoApi.Controlers.FunkosControler.GetAll(System.Int32)">
+            <summary>Obtiene una página de Funkos y sus metadatos de paginación.</summary>
+            <param name="page">Página solicitada, empezando por 1.</param>
+            <returns>La página, el total y los metadatos o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.FunkosControler.GetById(System.Int32)">
+            <summary>Busca un Funko por su identificador.</summary>
+            <param name="id">Identificador del Funko.</param>
+            <returns>El Funko o un error de dominio.</returns>
+            <response code="200">Devuelve el Funko encontrado.</response>
+            <response code="400">El identificador no es válido.</response>
+            <response code="404">No se encontró un Funko con el identificador proporcionado.</response>
+        </member>
+        <member name="M:FuncoApi.Controlers.FunkosControler.Create(FuncoApi.Dto.FunkoDto.FunkoCreateDto)">
+            <summary>Crea un Funko y devuelve el recurso con el ID generado por la base de datos.</summary>
+            <param name="request">Datos del Funko que se va a crear.</param>
+            <returns>El Funko creado o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.FunkosControler.Update(System.Int32,FuncoApi.Dto.FunkoDto.FunkoUpdateDto)">
+            <summary>Actualiza los datos editables de un Funko.</summary>
+            <param name="id">Identificador del Funko que se va a actualizar.</param>
+            <param name="request">Nuevos datos del Funko.</param>
+            <returns>El Funko actualizado o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.FunkosControler.Delete(System.Int32)">
+            <summary>Elimina un Funko por su identificador.</summary>
+            <param name="id">Identificador del Funko que se va a eliminar.</param>
+            <returns>El Funko eliminado o un error de dominio.</returns>
+        </member>
+        <member name="T:FuncoApi.Controlers.ProveedoresControler">
+            <summary>Expone las operaciones HTTP CRUD de proveedores.</summary>
+        </member>
+        <member name="M:FuncoApi.Controlers.ProveedoresControler.#ctor(FuncoApi.Services.ProveedoresService.IProveedorService)">
+            <summary>Inicializa el controlador con el servicio de proveedores.</summary>
+            <param name="service">Servicio de aplicación de proveedores.</param>
+        </member>
+        <member name="M:FuncoApi.Controlers.ProveedoresControler.GetAll(System.Int32)">
+            <summary>Obtiene una página de proveedores y sus metadatos de paginación.</summary>
+            <param name="page">Página solicitada, empezando por 1.</param>
+            <returns>La página, el total y los metadatos o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.ProveedoresControler.GetById(System.Int32)">
+            <summary>Busca un proveedor por su identificador.</summary>
+            <param name="id">Identificador del proveedor.</param>
+            <returns>El proveedor o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.ProveedoresControler.Create(FuncoApi.Dto.ProveedorDto.ProveedorCreateDto)">
+            <summary>Crea un proveedor y devuelve el ID generado por MongoDB.</summary>
+            <param name="request">Datos del proveedor que se va a crear.</param>
+            <returns>El proveedor creado o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.ProveedoresControler.Update(System.Int32,FuncoApi.Dto.ProveedorDto.ProveedorUpdateDto)">
+            <summary>Actualiza el nombre de un proveedor existente.</summary>
+            <param name="id">Identificador del proveedor que se va a actualizar.</param>
+            <param name="request">Nuevo nombre.</param>
+            <returns>El proveedor actualizado o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Controlers.ProveedoresControler.Delete(System.Int32)">
+            <summary>Elimina un proveedor por su identificador.</summary>
+            <param name="id">Identificador del proveedor que se va a eliminar.</param>
+            <returns>El proveedor eliminado o un error de dominio.</returns>
+        </member>
+        <member name="T:FuncoApi.Data.DevelopmentDataSeeder">
+            <summary>Inserta datos de ejemplo mediante los repositorios en entorno de desarrollo.</summary>
+        </member>
+        <member name="M:FuncoApi.Data.DevelopmentDataSeeder.SeedAsync(System.IServiceProvider,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger)">
+            <summary>Inicializa datos de prueba sin duplicarlos en ejecuciones posteriores.</summary>
+            <param name="services">Proveedor de servicios de la aplicación.</param>
+            <param name="configuration">Configuración que puede incluir la contraseña del Admin local.</param>
+            <param name="logger">Registrador para informar los datos inicializados.</param>
+        </member>
+        <member name="T:FuncoApi.SeedData.UserData">
+            <summary>Contenedor reservado para los datos iniciales de usuarios.</summary>
+        </member>
+        <member name="T:FuncoApi.Domain.DomainErrorCode">
+            <summary>Clasifica los errores de dominio que puede devolver un servicio.</summary>
+        </member>
+        <member name="F:FuncoApi.Domain.DomainErrorCode.Validation">
+            <summary>Los datos recibidos no cumplen las reglas de validación.</summary>
+        </member>
+        <member name="F:FuncoApi.Domain.DomainErrorCode.NotFound">
+            <summary>No existe el recurso solicitado.</summary>
+        </member>
+        <member name="F:FuncoApi.Domain.DomainErrorCode.Conflict">
+            <summary>La operación entra en conflicto con el estado existente.</summary>
+        </member>
+        <member name="F:FuncoApi.Domain.DomainErrorCode.Unauthorized">
+            <summary>La autenticación no pudo completarse por credenciales inválidas.</summary>
+        </member>
+        <member name="F:FuncoApi.Domain.DomainErrorCode.PersistenceFailure">
+            <summary>La persistencia no pudo completar la operación esperada.</summary>
+        </member>
+        <member name="T:FuncoApi.Domain.DomainError">
+            <summary>Describe un error de dominio con su categoría y mensaje legible.</summary>
+            <param name="Code">Categoría del error.</param>
+            <param name="Message">Descripción destinada al consumidor del servicio.</param>
+        </member>
+        <member name="M:FuncoApi.Domain.DomainError.#ctor(FuncoApi.Domain.DomainErrorCode,System.String)">
+            <summary>Describe un error de dominio con su categoría y mensaje legible.</summary>
+            <param name="Code">Categoría del error.</param>
+            <param name="Message">Descripción destinada al consumidor del servicio.</param>
+        </member>
+        <member name="P:FuncoApi.Domain.DomainError.Code">
+            <summary>Categoría del error.</summary>
+        </member>
+        <member name="P:FuncoApi.Domain.DomainError.Message">
+            <summary>Descripción destinada al consumidor del servicio.</summary>
+        </member>
+        <member name="T:FuncoApi.Domain.Errors">
+            <summary>Centraliza la creación de errores de dominio de la aplicación.</summary>
+        </member>
+        <member name="M:FuncoApi.Domain.Errors.Validation(System.String)">
+            <summary>Crea un error de validación con el mensaje especificado.</summary>
+        </member>
+        <member name="M:FuncoApi.Domain.Errors.NotFound(System.String,System.String)">
+            <summary>Crea un error para un recurso inexistente.</summary>
+            <param name="resource">Nombre del recurso.</param>
+            <param name="identifier">Identificador que no se encontró.</param>
+        </member>
+        <member name="M:FuncoApi.Domain.Errors.PersistenceFailure(System.String)">
+            <summary>Crea un error de persistencia al guardar un recurso.</summary>
+            <param name="resource">Nombre del recurso que no se pudo guardar.</param>
+        </member>
+        <member name="M:FuncoApi.Domain.Errors.DuplicateName(System.String,System.String)">
+            <summary>Crea un error de conflicto cuando ya existe otro recurso con ese nombre.</summary>
+            <param name="resource">Nombre del tipo de recurso.</param>
+            <param name="name">Nombre duplicado.</param>
+        </member>
+        <member name="T:FuncoApi.Domain.UserErrors">
+            <summary>Centraliza los errores de dominio propios de las operaciones de usuario.</summary>
+        </member>
+        <member name="M:FuncoApi.Domain.UserErrors.DuplicateName(System.String)">
+            <summary>Crea un error cuando el nombre ya está registrado.</summary>
+        </member>
+        <member name="M:FuncoApi.Domain.UserErrors.DuplicateEmail(System.String)">
+            <summary>Crea un error cuando el correo ya está registrado.</summary>
+        </member>
+        <member name="M:FuncoApi.Domain.UserErrors.NotFound(System.String)">
+            <summary>Crea un error cuando el usuario no existe.</summary>
+        </member>
+        <member name="M:FuncoApi.Domain.UserErrors.InvalidCredentials">
+            <summary>Crea un error para credenciales de autenticación inválidas.</summary>
+        </member>
+        <member name="M:FuncoApi.Domain.UserErrors.PersistenceFailure">
+            <summary>Crea un error cuando falla la persistencia de un usuario.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.CategoriaDto.CategoriaCreateDto">
+            <summary>Datos necesarios para crear una categoría.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.CategoriaDto.CategoriaCreateDto.Nombre">
+            <summary>Nombre único de la categoría.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.CategoriaDto.CategoriaResponseDto">
+            <summary>Datos de una categoría devueltos por la API.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.CategoriaDto.CategoriaResponseDto.Id">
+            <summary>Identificador textual de la categoría.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.CategoriaDto.CategoriaResponseDto.Nombre">
+            <summary>Nombre de la categoría.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.CategoriaDto.CategoriaUpdateDto">
+            <summary>Datos editables de una categoría; su identificador se recibe en la ruta.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.CategoriaDto.CategoriaUpdateDto.Nombre">
+            <summary>Nombre único de la categoría.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.FunkoDto.FunkoCreateDto">
+            <summary>Datos necesarios para crear un Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoCreateDto.Nombre">
+            <summary>Nombre único del Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoCreateDto.Imagen">
+            <summary>URL o referencia de la imagen.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoCreateDto.Precio">
+            <summary>Precio del Funko; debe ser como mínimo 0,1.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoCreateDto.Stock">
+            <summary>Unidades disponibles; no puede ser negativo.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoCreateDto.Categoria">
+            <summary>Identificador de la categoría asociada.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoCreateDto.Proveedor">
+            <summary>Identificador positivo del proveedor asociado.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.FunkoDto.FunkoResponseDto">
+            <summary>Datos de un Funko devueltos por la API.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoResponseDto.Id">
+            <summary>Identificador del Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoResponseDto.Nombre">
+            <summary>Nombre del Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoResponseDto.Imagen">
+            <summary>URL o referencia de la imagen.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoResponseDto.Precio">
+            <summary>Precio de venta.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoResponseDto.Stock">
+            <summary>Unidades disponibles.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoResponseDto.Categoria">
+            <summary>Identificador de la categoría asociada.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoResponseDto.Proveedor">
+            <summary>Identificador del proveedor asociado.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.FunkoDto.FunkoUpdateDto">
+            <summary>Datos editables de un Funko; su identificador se recibe en la ruta.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoUpdateDto.Nombre">
+            <summary>Nombre único del Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoUpdateDto.Imagen">
+            <summary>URL o referencia de la imagen.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoUpdateDto.Precio">
+            <summary>Precio del Funko; debe ser como mínimo 0,1.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoUpdateDto.Stock">
+            <summary>Unidades disponibles; no puede ser negativo.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoUpdateDto.Categoria">
+            <summary>Identificador de la categoría asociada.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.FunkoDto.FunkoUpdateDto.Proveedor">
+            <summary>Identificador positivo del proveedor asociado.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.ProveedorDto.ProveedorCreateDto">
+            <summary>Datos necesarios para crear un proveedor.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.ProveedorDto.ProveedorCreateDto.Nombre">
+            <summary>Nombre único del proveedor.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.ProveedorDto.ProveedorResponseDto">
+            <summary>Datos de un proveedor devueltos por la API.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.ProveedorDto.ProveedorResponseDto.Id">
+            <summary>Identificador del proveedor.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.ProveedorDto.ProveedorResponseDto.Nombre">
+            <summary>Nombre del proveedor.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.ProveedorDto.ProveedorUpdateDto">
+            <summary>Datos editables de un proveedor; su identificador se recibe en la ruta.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.ProveedorDto.ProveedorUpdateDto.Nombre">
+            <summary>Nombre único del proveedor.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.UserDto.AutentificationResponseDto">
+            <summary>Datos públicos devueltos tras registrar o autenticar a un usuario.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.UserDto.AutentificationResponseDto.Token">
+            <summary>Token JWT para autenticar solicitudes posteriores.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.UserDto.AutentificationResponseDto.Username">
+            <summary>Nombre del usuario autenticado.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.UserDto.AutentificationResponseDto.Rol">
+            <summary>Rol asignado al usuario.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.UserDto.LogginDto">
+            <summary>Credenciales enviadas para iniciar sesión.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.UserDto.LogginDto.Email">
+            <summary>Correo electrónico de la cuenta.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.UserDto.LogginDto.Password">
+            <summary>Contraseña en texto claro que se validará.</summary>
+        </member>
+        <member name="T:FuncoApi.Dto.UserDto.RegisterDto">
+            <summary>Datos requeridos para registrar una cuenta.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.UserDto.RegisterDto.Name">
+            <summary>Nombre que se asignará a la cuenta.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.UserDto.RegisterDto.Email">
+            <summary>Correo electrónico de acceso.</summary>
+        </member>
+        <member name="P:FuncoApi.Dto.UserDto.RegisterDto.Password">
+            <summary>Contraseña en texto claro recibida para el registro.</summary>
+        </member>
+        <member name="T:FuncoApi.Email.EmailSettings">
+            <summary>Configuración SMTP para el envío de correo mediante Gmail.</summary>
+        </member>
+        <member name="P:FuncoApi.Email.EmailSettings.Host">
+            <summary>Nombre DNS del servidor SMTP; Gmail usa <c>smtp.gmail.com</c>.</summary>
+        </member>
+        <member name="P:FuncoApi.Email.EmailSettings.Port">
+            <summary>Puerto STARTTLS del servidor SMTP; Gmail usa el puerto 587.</summary>
+        </member>
+        <member name="P:FuncoApi.Email.EmailSettings.SenderEmail">
+            <summary>Dirección de Gmail autenticada como remitente.</summary>
+        </member>
+        <member name="P:FuncoApi.Email.EmailSettings.SenderName">
+            <summary>Nombre visible del remitente.</summary>
+        </member>
+        <member name="P:FuncoApi.Email.EmailSettings.Password">
+            <summary>Contraseña de aplicación de Gmail; debe configurarse como secreto.</summary>
+        </member>
+        <member name="T:FuncoApi.Email.service.EmailService">
+            <summary>Construye mensajes de correo y los entrega al transporte SMTP configurado.</summary>
+        </member>
+        <member name="M:FuncoApi.Email.service.EmailService.#ctor(Microsoft.Extensions.Options.IOptions{FuncoApi.Email.EmailSettings},FuncoApi.Email.service.IEmailTransport)">
+            <summary>Inicializa el servicio con la configuración de Gmail y el transporte SMTP.</summary>
+            <param name="settings">Configuración del remitente y del servidor de correo.</param>
+            <param name="transport">Transporte encargado de entregar el mensaje.</param>
+        </member>
+        <member name="M:FuncoApi.Email.service.EmailService.SendEmailAsync(System.String,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Email.service.EmailService.SendEmailAsync(System.Collections.Generic.IReadOnlyCollection{System.String},System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Email.service.IEmailService">
+            <summary>Define operaciones para enviar correos electrónicos.</summary>
+        </member>
+        <member name="M:FuncoApi.Email.service.IEmailService.SendEmailAsync(System.String,System.String,System.String)">
+            <summary>Envía un correo a un destinatario.</summary>
+            <param name="to">Dirección del destinatario.</param>
+            <param name="subject">Asunto del mensaje.</param>
+            <param name="body">Contenido de texto plano.</param>
+        </member>
+        <member name="M:FuncoApi.Email.service.IEmailService.SendEmailAsync(System.Collections.Generic.IReadOnlyCollection{System.String},System.String,System.String)">
+            <summary>Envía un correo con destinatarios ocultos entre sí.</summary>
+            <param name="recipients">Direcciones que recibirán el mensaje en copia oculta.</param>
+            <param name="subject">Asunto del mensaje.</param>
+            <param name="body">Contenido de texto plano.</param>
+        </member>
+        <member name="T:FuncoApi.Email.service.IEmailTransport">
+            <summary>Transporta mensajes MIME a través del servicio SMTP configurado.</summary>
+        </member>
+        <member name="M:FuncoApi.Email.service.IEmailTransport.SendAsync(MimeKit.MimeMessage,FuncoApi.Email.EmailSettings)">
+            <summary>Envía un mensaje mediante SMTP.</summary>
+            <param name="message">Mensaje MIME completo.</param>
+            <param name="settings">Configuración de conexión y credenciales SMTP.</param>
+        </member>
+        <member name="T:FuncoApi.Email.service.MailKitEmailTransport">
+            <summary>Entrega mensajes MIME usando SMTP con STARTTLS mediante MailKit.</summary>
+        </member>
+        <member name="M:FuncoApi.Email.service.MailKitEmailTransport.SendAsync(MimeKit.MimeMessage,FuncoApi.Email.EmailSettings)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Entity.CategoriaEntity">
+            <summary>Entidad relacional que representa una categoría de Funkos.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.CategoriaEntity.Id">
+            <summary>Clave primaria textual de la categoría.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.CategoriaEntity.Nombre">
+            <summary>Nombre obligatorio y único de la categoría.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.CategoriaEntity.CreatedAt">
+            <summary>Fecha UTC de creación del registro.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.CategoriaEntity.UpdateAt">
+            <summary>Fecha UTC de la última modificación.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.CategoriaEntity.DeleteAt">
+            <summary>Fecha UTC en que se marcó como eliminado; nula si sigue activo.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.CategoriaEntity.IsDeleted">
+            <summary>Indica si el registro se ha eliminado lógicamente.</summary>
+        </member>
+        <member name="T:FuncoApi.Entity.FunkoEntity">
+            <summary>Entidad de persistencia relacional que representa un Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.Id">
+            <summary>Clave primaria generada por la base de datos.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.Nombre">
+            <summary>Nombre único y obligatorio del Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.Imagen">
+            <summary>URL o referencia de la imagen asociada.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.Precio">
+            <summary>Precio del Funko; debe ser al menos 0,1.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.Stock">
+            <summary>Unidades disponibles; debe ser un entero no negativo.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.Categoria">
+            <summary>Identificador de la categoría asociada.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.Proveedor">
+            <summary>Identificador del proveedor asociado.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.CreatedAt">
+            <summary>Fecha UTC de creación del registro.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.UpdateAt">
+            <summary>Fecha UTC de la última modificación.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.DeleteAt">
+            <summary>Fecha UTC en que se marcó como eliminado; nula si sigue activo.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.FunkoEntity.IsDeleted">
+            <summary>Indica si el registro se ha eliminado lógicamente.</summary>
+        </member>
+        <member name="T:FuncoApi.Entity.ProveedorEntity">
+            <summary>Entidad de proveedor serializada en la colección MongoDB <c>proveedores</c>.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.ProveedorEntity.Id">
+            <summary>Identificador del documento y clave primaria.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.ProveedorEntity.Nombre">
+            <summary>Nombre del proveedor, almacenado como <c>name</c> en MongoDB.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.ProveedorEntity.CreatedAt">
+            <summary>Fecha UTC de creación del registro.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.ProveedorEntity.UpdateAt">
+            <summary>Fecha UTC de la última modificación.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.ProveedorEntity.DeleteAt">
+            <summary>Fecha UTC en que se marcó como eliminado; nula si sigue activo.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.ProveedorEntity.IsDeleted">
+            <summary>Indica si el registro se ha eliminado lógicamente.</summary>
+        </member>
+        <member name="T:FuncoApi.Entity.UserEntity">
+            <summary>Registro de usuario persistido en la base de datos relacional.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.UserEntity.CreatedAt">
+            <summary>Fecha UTC de creación del registro.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.UserEntity.UpdateAt">
+            <summary>Fecha UTC de la última modificación.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.UserEntity.DeleteAt">
+            <summary>Fecha UTC en que se marcó como eliminado; nula si sigue activo.</summary>
+        </member>
+        <member name="P:FuncoApi.Entity.UserEntity.IsDeleted">
+            <summary>Indica si el registro se ha eliminado lógicamente.</summary>
+        </member>
+        <member name="T:FuncoApi.Mappers.CategoriaMapper">
+            <summary>Mapea categorías entre los modelos de aplicación y las entidades persistidas.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.CategoriaMapper.ToModel(FuncoApi.Dto.CategoriaDto.CategoriaCreateDto)">
+            <summary>Convierte los datos de creación en un modelo sin ID asignado.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.CategoriaMapper.ToModel(System.String,FuncoApi.Dto.CategoriaDto.CategoriaUpdateDto)">
+            <summary>Convierte los datos de actualización en un modelo con el ID de la ruta.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.CategoriaMapper.ToResponseDto(FuncoApi.Models.Categoria)">
+            <summary>Convierte el modelo de aplicación en el DTO de respuesta.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.CategoriaMapper.ToModel(FuncoApi.Entity.CategoriaEntity)">
+            <summary>Convierte una entidad persistida en el modelo de aplicación.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.CategoriaMapper.ToEntity(FuncoApi.Models.Categoria)">
+            <summary>Convierte un modelo en la entidad persistible.</summary>
+        </member>
+        <member name="T:FuncoApi.Mappers.FunkoMapper">
+            <summary>Mapea Funkos entre los modelos de aplicación y las entidades persistidas.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.FunkoMapper.ToModel(FuncoApi.Dto.FunkoDto.FunkoCreateDto)">
+            <summary>Convierte los datos de creación en un modelo de aplicación.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.FunkoMapper.ToModel(System.Int32,FuncoApi.Dto.FunkoDto.FunkoUpdateDto)">
+            <summary>Convierte los datos de actualización en un modelo con el ID de la ruta.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.FunkoMapper.ToResponseDto(FuncoApi.Models.Funko)">
+            <summary>Convierte el modelo de aplicación en el DTO de respuesta.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.FunkoMapper.ToModel(FuncoApi.Entity.FunkoEntity)">
+            <summary>Convierte una entidad persistida en el modelo de API.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.FunkoMapper.ToEntity(FuncoApi.Models.Funko)">
+            <summary>Convierte un modelo de API en una entidad persistible.</summary>
+        </member>
+        <member name="T:FuncoApi.Mappers.ProveedorMapper">
+            <summary>Mapea proveedores entre los modelos de aplicación y las entidades MongoDB.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.ProveedorMapper.ToModel(FuncoApi.Dto.ProveedorDto.ProveedorCreateDto)">
+            <summary>Convierte los datos de creación en un modelo sin ID asignado.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.ProveedorMapper.ToModel(System.Int32,FuncoApi.Dto.ProveedorDto.ProveedorUpdateDto)">
+            <summary>Convierte los datos de actualización en un modelo con el ID de la ruta.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.ProveedorMapper.ToResponseDto(FuncoApi.Models.Proveedor)">
+            <summary>Convierte el modelo de aplicación en el DTO de respuesta.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.ProveedorMapper.ToModel(FuncoApi.Entity.ProveedorEntity)">
+            <summary>Convierte una entidad persistida en el modelo de aplicación.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.ProveedorMapper.ToEntity(FuncoApi.Models.Proveedor)">
+            <summary>Convierte un modelo en la entidad persistible.</summary>
+        </member>
+        <member name="T:FuncoApi.Mappers.UserMapper">
+            <summary>Mapea usuarios entre modelos, entidades de persistencia y DTOs de autenticación.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.UserMapper.ToModel(FuncoApi.Dto.UserDto.RegisterDto)">
+            <summary>Convierte los datos de creación en un modelo sin ID asignado.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.UserMapper.ToModel(FuncoApi.Dto.UserDto.LogginDto)">
+            <summary>Convierte las credenciales de inicio de sesión en un modelo de usuario.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.UserMapper.ToResponseDto(FuncoApi.Models.User,System.String)">
+            <summary>Convierte el modelo de usuario y el token generado a la respuesta de autenticación.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.UserMapper.ToModel(FuncoApi.Entity.UserEntity)">
+            <summary>Convierte una entidad persistida en el modelo de aplicación.</summary>
+        </member>
+        <member name="M:FuncoApi.Mappers.UserMapper.ToEntity(FuncoApi.Models.User)">
+            <summary>Convierte un modelo en la entidad persistible.</summary>
+        </member>
+        <member name="T:FuncoApi.Models.Categoria">
+            <summary>Representa una categoría de Funkos en los modelos de la aplicación.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Categoria.Id">
+            <summary>Identificador textual de la categoría.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Categoria.Nombre">
+            <summary>Nombre legible de la categoría.</summary>
+        </member>
+        <member name="T:FuncoApi.Models.Funko">
+            <summary>Representa un Funko recibido o devuelto por la API.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Funko.Id">
+            <summary>Identificador asignado por la persistencia.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Funko.Nombre">
+            <summary>Nombre visible del Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Funko.Imagen">
+            <summary>URL o referencia de la imagen del Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Funko.Precio">
+            <summary>Precio de venta del Funko.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Funko.Stock">
+            <summary>Unidades disponibles en inventario.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Funko.Categoria">
+            <summary>Identificador de la categoría asociada.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Funko.Proveedor">
+            <summary>Identificador del proveedor asociado.</summary>
+        </member>
+        <member name="T:FuncoApi.Models.Proveedor">
+            <summary>Representa un proveedor en los modelos de la aplicación.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Proveedor.Id">
+            <summary>Identificador del proveedor.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Proveedor.Nombre">
+            <summary>Nombre legible del proveedor.</summary>
+        </member>
+        <member name="T:FuncoApi.Models.Rol">
+            <summary>Representa un rol previsto para las cuentas de usuario.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.Rol.Nombre">
+            <summary>Nombre descriptivo del rol.</summary>
+        </member>
+        <member name="T:FuncoApi.Models.User">
+            <summary>Representa una cuenta de usuario; actualmente no está conectada a autenticación.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.User.Id">
+            <summary>Identificador del usuario.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.User.Nombre">
+            <summary>Nombre del usuario.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.User.Email">
+            <summary>Dirección de correo electrónico del usuario.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.User.Password">
+            <summary>Campo de contraseña del modelo; el modelo no define su almacenamiento seguro.</summary>
+        </member>
+        <member name="P:FuncoApi.Models.User.Rol">
+            <summary>rol asignado al usuario.</summary>
+        </member>
+        <member name="T:FuncoApi.Repositories.CategoriaRepository">
+            <summary>Implementa las operaciones CRUD de categorías con EF Core.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.CategoriaRepository.#ctor(FuncoApi.Context.FuncoDbContext)">
+            <summary>Crea el repositorio para el contexto relacional indicado.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.CategoriaRepository.GetAllAsync(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.CategoriaRepository.GetByIdAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.CategoriaRepository.ExistsByNameAsync(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.CategoriaRepository.CreateAsync(FuncoApi.Entity.CategoriaEntity)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.CategoriaRepository.DeleteAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.CategoriaRepository.UpdateAsync(FuncoApi.Entity.CategoriaEntity)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Repositories.ICategoriaRepository">
+            <summary>Contrato de persistencia CRUD para categorías identificadas por texto.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.ICategoriaRepository.ExistsByNameAsync(System.String,System.String)">
+            <summary>Comprueba si ya existe una categoría con el nombre indicado.</summary>
+            <param name="name">Nombre que se quiere comprobar.</param>
+            <param name="excludedId">ID que se excluye al comprobar una actualización.</param>
+        </member>
+        <member name="T:FuncoApi.Repositories.FunkoRepository">
+            <summary>Implementa el acceso EF Core a Funkos y su borrado lógico.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.FunkoRepository.#ctor(FuncoApi.Context.FuncoDbContext)">
+            <summary>Crea el repositorio para el contexto relacional indicado.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.FunkoRepository.GetAllAsync(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.FunkoRepository.GetByIdAsync(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.FunkoRepository.ExistsByNameAsync(System.String,System.Nullable{System.Int32})">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.FunkoRepository.CreateAsync(FuncoApi.Entity.FunkoEntity)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.FunkoRepository.DeleteAsync(System.Int32)">
+            <summary>Marca un Funko activo como eliminado y actualiza sus marcas de tiempo.</summary>
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.FunkoRepository.UpdateAsync(FuncoApi.Entity.FunkoEntity)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Repositories.IFunkoRepository">
+            <summary>Contrato de persistencia CRUD para entidades de Funko.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.IFunkoRepository.ExistsByNameAsync(System.String,System.Nullable{System.Int32})">
+            <summary>Comprueba si ya existe un Funko con el nombre indicado.</summary>
+            <param name="name">Nombre que se quiere comprobar.</param>
+            <param name="excludedId">ID que se excluye al comprobar una actualización.</param>
+        </member>
+        <member name="T:FuncoApi.Repositories.ICrudRepository`2">
+            <summary>Define las operaciones asíncronas CRUD compartidas por los repositorios.</summary>
+            <typeparam name="T">Tipo de entidad administrada.</typeparam>
+            <typeparam name="TId">Tipo del identificador de la entidad.</typeparam>
+        </member>
+        <member name="M:FuncoApi.Repositories.ICrudRepository`2.GetAllAsync(System.Int32,System.Int32)">
+            <summary>Obtiene una página de entidades junto con el total disponible.</summary>
+            <param name="page">Número de página a devolver; la primera es 1.</param>
+            <param name="pageSize">Número máximo de elementos por página.</param>
+            <returns>La página y el total, o un error de dominio si falla la consulta.</returns>
+        </member>
+        <member name="M:FuncoApi.Repositories.ICrudRepository`2.GetByIdAsync(`1)">
+            <summary>Busca una entidad por su identificador.</summary>
+            <param name="id">Identificador de la entidad.</param>
+            <returns>La entidad encontrada o <see langword="null"/> si no existe.</returns>
+        </member>
+        <member name="M:FuncoApi.Repositories.ICrudRepository`2.CreateAsync(`0)">
+            <summary>Persiste una entidad nueva.</summary>
+            <param name="obj">Entidad que se va a crear.</param>
+            <returns>La entidad creada o <see langword="null"/> si la operación no produjo resultado.</returns>
+        </member>
+        <member name="M:FuncoApi.Repositories.ICrudRepository`2.DeleteAsync(`1)">
+            <summary>Elimina una entidad por su identificador.</summary>
+            <param name="id">Identificador de la entidad que se va a eliminar.</param>
+            <returns>La entidad eliminada o <see langword="null"/> si no existe.</returns>
+        </member>
+        <member name="M:FuncoApi.Repositories.ICrudRepository`2.UpdateAsync(`0)">
+            <summary>Actualiza una entidad existente.</summary>
+            <param name="obj">Entidad con el identificador y los nuevos valores.</param>
+            <returns>La entidad actualizada o <see langword="null"/> si no existe.</returns>
+        </member>
+        <member name="T:FuncoApi.Repositories.proveedoresRepository.IProveedorRepository">
+            <summary>Contrato de persistencia CRUD para proveedores identificados por entero.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.proveedoresRepository.IProveedorRepository.ExistsByNameAsync(System.String,System.Nullable{System.Int32})">
+            <summary>Comprueba si ya existe un proveedor con el nombre indicado.</summary>
+            <param name="name">Nombre que se quiere comprobar.</param>
+            <param name="excludedId">ID que se excluye al comprobar una actualización.</param>
+        </member>
+        <member name="T:FuncoApi.Repositories.proveedoresRepository.ProveedorRepository">
+            <summary>Implementa el repositorio de proveedores delegando en su fuente de datos MongoDB.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.proveedoresRepository.ProveedorRepository.#ctor(FuncoApi.Context.Mongo.IProveedorDataSource)">
+            <summary>Crea el repositorio con la fuente de datos indicada.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.proveedoresRepository.ProveedorRepository.GetAllAsync(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.proveedoresRepository.ProveedorRepository.ExistsByNameAsync(System.String,System.Nullable{System.Int32})">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.proveedoresRepository.ProveedorRepository.GetByIdAsync(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.proveedoresRepository.ProveedorRepository.CreateAsync(FuncoApi.Entity.ProveedorEntity)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.proveedoresRepository.ProveedorRepository.DeleteAsync(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.proveedoresRepository.ProveedorRepository.UpdateAsync(FuncoApi.Entity.ProveedorEntity)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Repositories.userRepository.IUserRepository">
+            <summary>Define las operaciones de persistencia para los usuarios de la aplicación.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.IUserRepository.GetByEmailAsync(System.String)">
+            <summary>Busca un usuario activo por su correo electrónico.</summary>
+            <param name="email">Correo electrónico buscado.</param>
+            <returns>El usuario encontrado o <see langword="null"/>.</returns>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.IUserRepository.ExistsByNameAsync(System.String)">
+            <summary>Indica si el nombre está registrado, incluso en usuarios borrados lógicamente.</summary>
+            <param name="name">Nombre que se comprobará.</param>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.IUserRepository.ExistsByEmailAsync(System.String)">
+            <summary>Indica si el correo está registrado, incluso en usuarios borrados lógicamente.</summary>
+            <param name="email">Correo que se comprobará.</param>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.IUserRepository.GetAllEmailsAsync">
+            <summary>Obtiene los correos de todos los usuarios activos.</summary>
+            <returns>Lista de direcciones de usuarios no eliminados lógicamente.</returns>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.IUserRepository.GetByIdAsync(System.Guid)">
+            <summary>Busca un usuario activo por su identificador.</summary>
+            <param name="id">Identificador del usuario.</param>
+            <returns>El usuario encontrado o <see langword="null"/>.</returns>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.IUserRepository.CreateAsync(FuncoApi.Models.User)">
+            <summary>Crea un usuario y asigna sus valores de persistencia.</summary>
+            <param name="usuario">Modelo del usuario que se creará.</param>
+            <returns>El usuario persistido o <see langword="null"/> si ya existe su nombre o correo.</returns>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.IUserRepository.UpdateAsync(FuncoApi.Models.User)">
+            <summary>Actualiza los datos de un usuario activo.</summary>
+            <param name="usuario">Modelo con los datos actualizados.</param>
+            <returns>El usuario actualizado o <see langword="null"/> si no existe.</returns>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.IUserRepository.DeleteAsync(System.String)">
+            <summary>Marca como eliminado un usuario activo.</summary>
+            <param name="id">Identificador del usuario, en formato GUID.</param>
+            <returns>El usuario eliminado o <see langword="null"/> si no existe.</returns>
+        </member>
+        <member name="T:FuncoApi.Repositories.userRepository.UsuarioRepository">
+            <summary>Implementa la persistencia relacional de usuarios mediante Entity Framework Core.</summary>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.UsuarioRepository.#ctor(FuncoApi.Context.FuncoDbContext)">
+            <summary>Inicializa el repositorio con el contexto relacional de la aplicación.</summary>
+            <param name="context">Contexto que permite consultar y guardar usuarios.</param>
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.UsuarioRepository.GetByEmailAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.UsuarioRepository.ExistsByNameAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.UsuarioRepository.ExistsByEmailAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.UsuarioRepository.GetAllEmailsAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.UsuarioRepository.GetByIdAsync(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.UsuarioRepository.CreateAsync(FuncoApi.Models.User)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.UsuarioRepository.UpdateAsync(FuncoApi.Models.User)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Repositories.userRepository.UsuarioRepository.DeleteAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Services.Authorification.AuthService">
+            <summary>Implementa el registro y el inicio de sesión de usuarios.</summary>
+        </member>
+        <member name="M:FuncoApi.Services.Authorification.AuthService.#ctor(FuncoApi.Repositories.userRepository.IUserRepository,FuncoApi.Tokens.IJwtTokens,FuncoApi.Email.service.IEmailService)">
+            <summary>Inicializa el servicio con el repositorio de usuarios y el generador JWT.</summary>
+            <param name="repository">Repositorio empleado para consultar y crear usuarios.</param>
+            <param name="jwtService">Servicio que genera los tokens de autenticación.</param>
+            <param name="emailService">Servicio para enviar correos electrónicos.</param>
+        </member>
+        <member name="M:FuncoApi.Services.Authorification.AuthService.RegisterAsync(FuncoApi.Dto.UserDto.RegisterDto)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Services.Authorification.AuthService.LoginAsync(FuncoApi.Dto.UserDto.LogginDto)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Services.Authorification.IAuthService">
+            <summary>Define los casos de uso de registro e inicio de sesión.</summary>
+        </member>
+        <member name="M:FuncoApi.Services.Authorification.IAuthService.RegisterAsync(FuncoApi.Dto.UserDto.RegisterDto)">
+            <summary>Registra una cuenta y genera un token JWT.</summary>
+            <param name="dto">Datos necesarios para registrar al usuario.</param>
+            <returns>La respuesta de autenticación o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.Authorification.IAuthService.LoginAsync(FuncoApi.Dto.UserDto.LogginDto)">
+            <summary>Valida las credenciales y genera un token JWT.</summary>
+            <param name="dto">Credenciales del usuario.</param>
+            <returns>La respuesta de autenticación o un error de dominio.</returns>
+        </member>
+        <member name="T:FuncoApi.Services.CategoriaService.CategoriaService">
+            <summary>Coordina la validación, persistencia y caché de categorías.</summary>
+        </member>
+        <member name="M:FuncoApi.Services.CategoriaService.CategoriaService.#ctor(FuncoApi.Cache.objet.ICacheService,FuncoApi.Repositories.ICategoriaRepository)">
+            <summary>Inicializa el servicio con sus dependencias de caché y persistencia.</summary>
+            <param name="cache">Caché para resultados de categorías.</param>
+            <param name="categoriaRepository">Repositorio relacional de categorías.</param>
+        </member>
+        <member name="M:FuncoApi.Services.CategoriaService.CategoriaService.GetAll(System.Int32)">
+            <summary>Obtiene una página de categorías y el total, o devuelve errores de validación o consulta.</summary>
+            <param name="page">Número de página, empezando por 1.</param>
+            <returns>Resultado con las categorías de la página y el total de categorías.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.CategoriaService.CategoriaService.GetById(System.String)">
+            <summary>Busca una categoría por su identificador y guarda el resultado en caché.</summary>
+            <param name="id">Identificador textual de la categoría.</param>
+            <returns>La categoría encontrada o un error de validación o no encontrado.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.CategoriaService.CategoriaService.Create(FuncoApi.Models.Categoria)">
+            <summary>Valida y crea una categoría, invalidando la caché de la lista.</summary>
+            <param name="obj">Datos de la categoría que se va a crear.</param>
+            <returns>La categoría creada o un error de validación o persistencia.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.CategoriaService.CategoriaService.Update(System.String,FuncoApi.Models.Categoria)">
+            <summary>Valida y actualiza una categoría existente e invalida sus entradas de caché.</summary>
+            <param name="id">Identificador esperado en la operación.</param>
+            <param name="obj">Datos actualizados, incluido el mismo identificador.</param>
+            <returns>La categoría actualizada o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.CategoriaService.CategoriaService.Delete(System.String)">
+            <summary>Elimina una categoría existente e invalida sus entradas de caché.</summary>
+            <param name="id">Identificador textual de la categoría.</param>
+            <returns>La categoría eliminada o un error de validación o no encontrado.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.CategoriaService.CategoriaService.InvalidateCategoriaCache(System.String)">
+            <summary>Invalida la lista y la entrada de caché individual de una categoría.</summary>
+        </member>
+        <member name="M:FuncoApi.Services.CategoriaService.CategoriaService.GetCategoriaCacheKey(System.String)">
+            <summary>Construye la clave de caché individual de una categoría.</summary>
+        </member>
+        <member name="T:FuncoApi.Services.CategoriaService.ICategoriaService">
+            <summary>Contrato de operaciones de aplicación para categorías.</summary>
+        </member>
+        <member name="T:FuncoApi.Services.FunkosService.FunkoService">
+            <summary>Coordina la validación, persistencia y caché de Funkos.</summary>
+        </member>
+        <member name="M:FuncoApi.Services.FunkosService.FunkoService.#ctor(FuncoApi.Cache.objet.ICacheService,FuncoApi.Repositories.IFunkoRepository,FuncoApi.Repositories.userRepository.IUserRepository,FuncoApi.Email.service.IEmailService,Microsoft.Extensions.Logging.ILogger{FuncoApi.Services.FunkosService.FunkoService})">
+            <summary>Inicializa el servicio con sus dependencias de caché y persistencia.</summary>
+            <param name="cache">Caché para resultados de Funkos.</param>
+            <param name="funkoRepository">Repositorio de persistencia relacional.</param>
+            <param name="userRepository">Repositorio que proporciona las direcciones de los usuarios activos.</param>
+            <param name="emailService">Servicio que envía avisos por correo.</param>
+            <param name="logger">Registrador de fallos de notificación.</param>
+        </member>
+        <member name="M:FuncoApi.Services.FunkosService.FunkoService.GetAll(System.Int32)">
+            <summary>Obtiene una página de Funkos activos y el total, o devuelve errores de validación o consulta.</summary>
+            <param name="page">Número de página, empezando por 1.</param>
+            <returns>Resultado con los modelos de la página y el total de Funkos activos.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.FunkosService.FunkoService.GetById(System.Int32)">
+            <summary>Obtiene un Funko activo por ID y guarda el resultado en caché.</summary>
+            <param name="id">Identificador positivo del Funko.</param>
+            <returns>El Funko o un error de validación o de recurso no encontrado.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.FunkosService.FunkoService.Create(FuncoApi.Models.Funko)">
+            <summary>Valida y persiste un Funko nuevo, invalidando la caché de la lista.</summary>
+            <param name="obj">Datos del Funko que se va a crear.</param>
+            <returns>El Funko creado o un error de validación o persistencia.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.FunkosService.FunkoService.Update(System.Int32,FuncoApi.Models.Funko)">
+            <summary>Valida y actualiza un Funko existente, invalidando sus entradas de caché.</summary>
+            <param name="id">Identificador esperado en la ruta.</param>
+            <param name="obj">Datos actualizados, incluido el mismo identificador.</param>
+            <returns>El Funko actualizado o un error de validación o de recurso no encontrado.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.FunkosService.FunkoService.Delete(System.Int32)">
+            <summary>Marca como eliminado un Funko y elimina sus entradas de caché.</summary>
+            <param name="id">Identificador positivo del Funko.</param>
+            <returns>El Funko eliminado o un error de validación o de recurso no encontrado.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.FunkosService.FunkoService.NotifyUsersAsync(System.String,System.String,System.Int32,System.String)">
+            <summary>Notifica a los usuarios activos sin revertir un CRUD correcto si falla el correo.</summary>
+        </member>
+        <member name="M:FuncoApi.Services.FunkosService.FunkoService.InvalidateFunkoCache(System.Int32)">
+            <summary>Invalida la lista y la entrada de caché del Funko indicado.</summary>
+        </member>
+        <member name="M:FuncoApi.Services.FunkosService.FunkoService.GetFunkoCacheKey(System.Int32)">
+            <summary>Construye la clave de caché individual de un Funko.</summary>
+        </member>
+        <member name="T:FuncoApi.Services.FunkosService.IFunkosService">
+            <summary>Contrato de operaciones de aplicación para Funkos.</summary>
+        </member>
+        <member name="T:FuncoApi.Services.objet.IService`2">
+            <summary>Define operaciones de aplicación CRUD que devuelven un resultado de dominio.</summary>
+            <typeparam name="T">Tipo del modelo expuesto por el servicio.</typeparam>
+            <typeparam name="TId">Tipo del identificador del recurso.</typeparam>
+        </member>
+        <member name="M:FuncoApi.Services.objet.IService`2.GetAll(System.Int32)">
+            <summary>Obtiene una página de modelos junto con el número total disponible.</summary>
+            <param name="page">Número de página a devolver; la primera es 1.</param>
+            <returns>Un resultado con los modelos de la página y el total de registros.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.objet.IService`2.GetById(`1)">
+            <summary>Obtiene un modelo por identificador.</summary>
+            <param name="id">Identificador del modelo.</param>
+            <returns>Un resultado con el modelo o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.objet.IService`2.Create(`0)">
+            <summary>Valida y crea un modelo.</summary>
+            <param name="obj">Modelo que se va a crear.</param>
+            <returns>Un resultado con el modelo creado o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.objet.IService`2.Update(`1,`0)">
+            <summary>Valida y actualiza un modelo existente.</summary>
+            <param name="id">Identificador de la ruta o de la operación.</param>
+            <param name="obj">Modelo con los nuevos valores.</param>
+            <returns>Un resultado con el modelo actualizado o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.objet.IService`2.Delete(`1)">
+            <summary>Elimina el modelo identificado por el valor indicado.</summary>
+            <param name="id">Identificador del modelo que se va a eliminar.</param>
+            <returns>Un resultado con el modelo eliminado o un error de dominio.</returns>
+        </member>
+        <member name="T:FuncoApi.Services.ProveedoresService.IProveedorService">
+            <summary>Contrato de operaciones de aplicación para proveedores.</summary>
+        </member>
+        <member name="T:FuncoApi.Services.ProveedoresService.ProveedorService">
+            <summary>Coordina validación, persistencia MongoDB y caché de proveedores.</summary>
+        </member>
+        <member name="M:FuncoApi.Services.ProveedoresService.ProveedorService.#ctor(FuncoApi.Cache.objet.ICacheService,FuncoApi.Repositories.proveedoresRepository.IProveedorRepository)">
+            <summary>Inicializa el servicio con sus dependencias de caché y persistencia.</summary>
+            <param name="cache">Caché para resultados de proveedores.</param>
+            <param name="proveedorRepository">Repositorio MongoDB de proveedores.</param>
+        </member>
+        <member name="M:FuncoApi.Services.ProveedoresService.ProveedorService.GetAll(System.Int32)">
+            <summary>Obtiene una página de proveedores y el total, o devuelve errores de validación o consulta.</summary>
+            <param name="page">Número de página, empezando por 1.</param>
+            <returns>Resultado con los proveedores de la página y el total de proveedores.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.ProveedoresService.ProveedorService.GetById(System.Int32)">
+            <summary>Busca un proveedor por su identificador y guarda el resultado en caché.</summary>
+            <param name="id">Identificador positivo del proveedor.</param>
+            <returns>El proveedor encontrado o un error de validación o no encontrado.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.ProveedoresService.ProveedorService.Create(FuncoApi.Models.Proveedor)">
+            <summary>Valida y crea un proveedor, invalidando la caché de la lista.</summary>
+            <param name="obj">Datos del proveedor que se va a crear.</param>
+            <returns>El proveedor creado o un error de validación o persistencia.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.ProveedoresService.ProveedorService.Update(System.Int32,FuncoApi.Models.Proveedor)">
+            <summary>Valida y actualiza un proveedor existente e invalida sus entradas de caché.</summary>
+            <param name="id">Identificador esperado en la operación.</param>
+            <param name="obj">Datos actualizados, incluido el mismo identificador.</param>
+            <returns>El proveedor actualizado o un error de dominio.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.ProveedoresService.ProveedorService.Delete(System.Int32)">
+            <summary>Elimina un proveedor existente e invalida sus entradas de caché.</summary>
+            <param name="id">Identificador positivo del proveedor.</param>
+            <returns>El proveedor eliminado o un error de validación o no encontrado.</returns>
+        </member>
+        <member name="M:FuncoApi.Services.ProveedoresService.ProveedorService.InvalidateProveedorCache(System.Int32)">
+            <summary>Invalida la lista y la entrada de caché individual del proveedor.</summary>
+        </member>
+        <member name="M:FuncoApi.Services.ProveedoresService.ProveedorService.GetProveedorCacheKey(System.Int32)">
+            <summary>Construye la clave de caché individual de un proveedor.</summary>
+        </member>
+        <member name="T:FuncoApi.Tokens.IJwtTokens">
+            <summary>Define la generación y validación de tokens de acceso JWT.</summary>
+        </member>
+        <member name="M:FuncoApi.Tokens.IJwtTokens.GenerateToken(FuncoApi.Models.User)">
+            <summary>
+            Genera un token JWT para el usuario especificado.
+            </summary>
+            <param name="usuario">El usuario para el cual se generará el token.</param>
+            <returns>El token JWT generado.</returns>
+        </member>
+        <member name="M:FuncoApi.Tokens.IJwtTokens.ValidateToken(System.String)">
+            <summary>
+            Valida un token JWT y devuelve el usuario correspondiente si es válido.
+            </summary>
+            <param name="token">El token JWT a validar.</param>
+            <returns>El usuario correspondiente si el token es válido; de lo contrario, null.</returns>
+        </member>
+        <member name="T:FuncoApi.Tokens.JwtService">
+            <summary>
+            Servicio para generación y validación de tokens JWT.
+            </summary>
+        </member>
+        <member name="M:FuncoApi.Tokens.JwtService.#ctor(Microsoft.Extensions.Options.IOptions{FunkoApi.Routes.JwtSettings})">
+            <summary>Inicializa el servicio con las opciones de configuración JWT.</summary>
+            <param name="settings">Emisor, audiencia, clave de firma y duración de los tokens.</param>
+        </member>
+        <member name="M:FuncoApi.Tokens.JwtService.GenerateToken(FuncoApi.Models.User)">
+            <inheritdoc />
+        </member>
+        <member name="M:FuncoApi.Tokens.JwtService.ValidateToken(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FuncoApi.Validators.CategoriaValidator">
+            <summary>Aplica las reglas de dominio a los modelos de categoría.</summary>
+        </member>
+        <member name="M:FuncoApi.Validators.CategoriaValidator.Validate(FuncoApi.Models.Categoria,System.Boolean)">
+            <summary>Comprueba los campos obligatorios y, si corresponde, el identificador de categoría.</summary>
+            <param name="categoria">Modelo que se va a validar; puede ser nulo.</param>
+            <param name="requireId">Indica si la operación requiere un ID ya asignado.</param>
+            <returns><see langword="null"/> si es válido; en caso contrario, el primer error encontrado.</returns>
+        </member>
+        <member name="T:FuncoApi.Validators.FunkoValidator">
+            <summary>Aplica las reglas de dominio al modelo de un Funko.</summary>
+        </member>
+        <member name="M:FuncoApi.Validators.FunkoValidator.Validate(FuncoApi.Models.Funko)">
+            <summary>Valida los campos obligatorios y los límites de precio, stock y proveedor.</summary>
+            <param name="funko">Modelo que se va a validar; puede ser nulo.</param>
+            <returns><see langword="null"/> si es válido; en caso contrario, el primer error encontrado.</returns>
+        </member>
+        <member name="T:FuncoApi.Validators.ProveedorValidator">
+            <summary>Aplica las reglas de dominio a los modelos de proveedor.</summary>
+        </member>
+        <member name="M:FuncoApi.Validators.ProveedorValidator.Validate(FuncoApi.Models.Proveedor,System.Boolean)">
+            <summary>Comprueba que el proveedor tenga un nombre y, si corresponde, un ID positivo.</summary>
+            <param name="proveedor">Modelo que se va a validar; puede ser nulo.</param>
+            <param name="requireId">Indica si la operación requiere un ID ya asignado.</param>
+            <returns><see langword="null"/> si es válido; en caso contrario, el primer error encontrado.</returns>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+        <member name="T:FunkoApi.Routes.FunkoRoutes">
+            <summary>Registra los endpoints HTTP de gestión de Funkos.</summary>
+        </member>
+        <member name="M:FunkoApi.Routes.FunkoRoutes.MapFunkosRoutes(Microsoft.AspNetCore.Builder.WebApplication)">
+            <summary>Mapea las rutas CRUD de Funkos bajo <c>/api/funcopops</c>.</summary>
+            <param name="app">Aplicación ASP.NET Core en la que se registran las rutas.</param>
+        </member>
+        <member name="M:FunkoApi.Routes.FunkoRoutes.ToHttpResult``1(CSharpFunctionalExtensions.Result{``0,FuncoApi.Domain.DomainError})">
+            <summary>Convierte el resultado de dominio a una respuesta HTTP.</summary>
+        </member>
+        <member name="T:FunkoApi.Routes.JWTBuilder">
+            <summary>Configura autenticación y autorización JWT para la aplicación ASP.NET Core.</summary>
+        </member>
+        <member name="M:FunkoApi.Routes.JWTBuilder.#ctor(Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
+            <summary>Inicializa la configuración JWT desde la configuración de la aplicación.</summary>
+            <param name="builder">Constructor de aplicación al que se añadirán los servicios.</param>
+        </member>
+        <member name="M:FunkoApi.Routes.JWTBuilder.ConfigureJWT">
+            <summary>Registra la validación de firma, emisor, audiencia y vigencia de los JWT.</summary>
+        </member>
+        <member name="T:FunkoApi.Routes.JwtSettings">
+            <summary>Opciones de configuración utilizadas para crear tokens JWT.</summary>
+        </member>
+        <member name="P:FunkoApi.Routes.JwtSettings.Key">
+            <summary>Clave simétrica usada para firmar los tokens.</summary>
+        </member>
+        <member name="P:FunkoApi.Routes.JwtSettings.Issuer">
+            <summary>Emisor esperado del token.</summary>
+        </member>
+        <member name="P:FunkoApi.Routes.JwtSettings.Audience">
+            <summary>Audiencia para la que se emite el token.</summary>
+        </member>
+        <member name="P:FunkoApi.Routes.JwtSettings.DurationInMinutes">
+            <summary>Duración del token en minutos.</summary>
+        </member>
+    </members>
+</doc>

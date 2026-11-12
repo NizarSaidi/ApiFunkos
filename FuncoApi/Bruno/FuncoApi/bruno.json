@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "FuncoApi",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"]
+}

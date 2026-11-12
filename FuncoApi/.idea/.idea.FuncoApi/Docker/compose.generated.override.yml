@@ -2,7 +2,8 @@
 services:
   funcoapi:
     build:
-      context: "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\FuncoApi"
+      context: "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\ApiFunkos\\\
+        FuncoApi"
       dockerfile: "FuncoApi/Dockerfile"
       target: "base"
     command: []
@@ -15,7 +16,31 @@ services:
     image: "funcoapi:dev"
     ports: []
     volumes:
-    - "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\FuncoApi\\FuncoApi:/app:rw"
-    - "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\FuncoApi:/src:rw"
+    - "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\ApiFunkos\\\
+      FuncoApi\\FuncoApi:/app:rw"
+    - "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\ApiFunkos\\\
+      FuncoApi:/src:rw"
+    - "C:\\Users\\NIZAR\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"
+  funcoapi.test:
+    build:
+      context: "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\ApiFunkos\\\
+        FuncoApi"
+      dockerfile: "FuncoApi.Test/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net10.0/FuncoApi.Test.dll"
+    environment:
+      DOTNET_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "funcoapi.test:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\ApiFunkos\\\
+      FuncoApi\\FuncoApi.Test:/app:rw"
+    - "C:\\Users\\NIZAR\\Documents\\ESTUDIOS\\EntornoServidor\\Funko\\ApiFunkos\\\
+      FuncoApi:/src:rw"
     - "C:\\Users\\NIZAR\\.nuget\\packages:/home/app/.nuget/packages"
     working_dir: "/app"

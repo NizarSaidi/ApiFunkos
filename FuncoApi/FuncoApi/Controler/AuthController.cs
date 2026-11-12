@@ -19,6 +19,7 @@ public class AuthController : ApiControllerBase
     }
 
     [HttpPost("register")]
+    [Tags("Autenticación")]
     [ProducesResponseType(typeof(AutentificationResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -35,6 +36,7 @@ public class AuthController : ApiControllerBase
     }
 
     [HttpPost("login")]
+    [Tags("Autenticación")]
     [ProducesResponseType(typeof(AutentificationResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     /// <summary>Valida las credenciales e inicia sesión.</summary>

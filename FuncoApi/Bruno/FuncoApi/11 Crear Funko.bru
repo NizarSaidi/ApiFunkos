@@ -1,0 +1,44 @@
+meta {
+  name: Crear Funko
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{baseUrl}}/api/funcopops
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nombre": "Bruno Funko {{testRunId}}",
+    "imagen": "https://example.com/bruno-test.png",
+    "precio": 12.50,
+    "stock": 2,
+    "categoria": "{{categoryId}}",
+    "proveedor": {{providerId}}
+  }
+}
+
+script:post-response {
+  bru.setVar("funkoId", res.getBody().id);
+}
+
+tests {
+  test("Crea un Funko y devuelve su identificador", function() {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().id).to.be.a("number").and.greaterThan(0);
+    expect(res.getBody().nombre).to.equal("Bruno Funko " + bru.getVar("testRunId"));
+    expect(res.getBody().categoria).to.equal(bru.getVar("categoryId"));
+    expect(res.getBody().proveedor).to.equal(bru.getVar("providerId"));
+  });
+}

@@ -1,0 +1,22 @@
+meta {
+  name: Eliminar Categoria
+  type: http
+  seq: 15
+}
+
+delete {
+  url: {{baseUrl}}/api/categorias/{{categoryId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  test("Elimina la categoría creada", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().id).to.equal(bru.getVar("categoryId"));
+  });
+}

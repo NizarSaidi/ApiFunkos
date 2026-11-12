@@ -1,0 +1,19 @@
+meta {
+  name: Leer Proveedor
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/proveedores/{{providerId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Obtiene el proveedor creado", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().id).to.equal(bru.getVar("providerId"));
+    expect(res.getBody().nombre).to.equal("Bruno proveedor " + bru.getVar("testRunId"));
+  });
+}

@@ -3,11 +3,13 @@ using FuncoApi.Mappers;
 using FuncoApi.Services.FunkosService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FuncoApi.Controlers;
 
 /// <summary>Expone las operaciones HTTP CRUD de Funkos.</summary>
 [ApiController]
+[Tags("Funkos")]
 [Route("api/funcopops")]
 public class FunkosControler : ApiControllerBase
 {
@@ -24,6 +26,7 @@ public class FunkosControler : ApiControllerBase
     /// <param name="page">Página solicitada, empezando por 1.</param>
     /// <returns>La página, el total y los metadatos o un error de dominio.</returns>
     [HttpGet]
+    [OutputCache(Duration = 60)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1)
@@ -49,7 +52,12 @@ public class FunkosControler : ApiControllerBase
     /// <summary>Busca un Funko por su identificador.</summary>
     /// <param name="id">Identificador del Funko.</param>
     /// <returns>El Funko o un error de dominio.</returns>
+    /// <response code="200">Devuelve el Funko encontrado.</response>
+    /// <response code="400">El identificador no es válido.</response>
+    /// <response code="404">No se encontró un Funko con el identificador proporcionado.</response>
+    
     [HttpGet("{id:int}")]
+    [OutputCache(Duration = 60)]
     [ProducesResponseType(typeof(FunkoResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -4,11 +4,13 @@ using FuncoApi.Mappers;
 using FuncoApi.Services.CategoriaService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace FuncoApi.Controlers;
 
 /// <summary>Expone las operaciones HTTP CRUD de categorías.</summary>
 [ApiController]
+[Tags("Categorías")]
 [Route("api/categorias")]
 public class CategoriasControler : ApiControllerBase
 {
@@ -25,6 +27,7 @@ public class CategoriasControler : ApiControllerBase
     /// <param name="page">Página solicitada, empezando por 1.</param>
     /// <returns>La página, el total y los metadatos o un error de dominio.</returns>
     [HttpGet]
+    [OutputCache(Duration = 60)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1)
@@ -51,6 +54,7 @@ public class CategoriasControler : ApiControllerBase
     /// <param name="id">Identificador textual de la categoría.</param>
     /// <returns>La categoría o un error de dominio.</returns>
     [HttpGet("{id}")]
+    [OutputCache(Duration = 60)]
     [ProducesResponseType(typeof(CategoriaResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

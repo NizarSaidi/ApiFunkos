@@ -5,6 +5,8 @@ using FuncoApi.Email.service;
 using FuncoApi.Mappers;
 using FuncoApi.Repositories.userRepository;
 using FuncoApi.Tokens;
+using MailKit;
+using Microsoft.Extensions.Logging;
 
 namespace FuncoApi.Services.Authorification;
 
@@ -16,16 +18,23 @@ public class AuthService : IAuthService
     private readonly IJwtTokens _jwtService;
     
     private readonly IEmailService _emailService;
+    private readonly ILogger<AuthService> _logger;
 
     /// <summary>Inicializa el servicio con el repositorio de usuarios y el generador JWT.</summary>
     /// <param name="repository">Repositorio empleado para consultar y crear usuarios.</param>
     /// <param name="jwtService">Servicio que genera los tokens de autenticación.</param>
     /// <param name="emailService">Servicio para enviar correos electrónicos.</param>
-    public AuthService(IUserRepository repository, IJwtTokens jwtService, IEmailService emailService)
+    /// <param name="logger">Registrador para informar fallos no críticos al enviar notificaciones.</param>
+    public AuthService(
+        IUserRepository repository,
+        IJwtTokens jwtService,
+        IEmailService emailService,
+        ILogger<AuthService> logger)
     {
         _repository = repository;
         _jwtService = jwtService;
         _emailService = emailService;
+        _logger = logger;
     }
 
     /// <inheritdoc />
@@ -57,7 +66,7 @@ public class AuthService : IAuthService
 
         var response = UserMapper.ToResponseDto(created, _jwtService.GenerateToken(created));
         
-        await _emailService.SendEmailAsync(
+        await SendNotificationEmailAsync(
             usuario.Email,
             "Bienvenido",
             $"Hola {usuario.Nombre}, tu cuenta ha sido creada correctamente.");
@@ -85,10 +94,27 @@ public class AuthService : IAuthService
         }
 
         var response = UserMapper.ToResponseDto(usuario, _jwtService.GenerateToken(usuario));
-        await _emailService.SendEmailAsync(
+        await SendNotificationEmailAsync(
             usuario.Email,
             "Bienvenido de nuevo",
             $"Hola {usuario.Nombre}, tu cuenta se ha iniciado sesión correctamente.");
         return Result.Success<AutentificationResponseDto, DomainError>(response);
+    }
+
+    private async Task SendNotificationEmailAsync(string to, string subject, string body)
+    {
+        try
+        {
+            await _emailService.SendEmailAsync(to, subject, body);
+        }
+        catch (Exception exception) when (
+            exception is ProtocolException or
+            CommandException or
+            MailKit.Security.AuthenticationException or
+            IOException or
+            System.Net.Sockets.SocketException)
+        {
+            _logger.LogWarning(exception, "No se pudo enviar el correo de autenticación.");
+        }
     }
 }

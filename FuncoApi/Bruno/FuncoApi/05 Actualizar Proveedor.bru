@@ -1,0 +1,29 @@
+meta {
+  name: Actualizar Proveedor
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/proveedores/{{providerId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nombre": "Bruno proveedor actualizado {{testRunId}}"
+  }
+}
+
+tests {
+  test("Actualiza el proveedor", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().id).to.equal(bru.getVar("providerId"));
+    expect(res.getBody().nombre).to.equal("Bruno proveedor actualizado " + bru.getVar("testRunId"));
+  });
+}

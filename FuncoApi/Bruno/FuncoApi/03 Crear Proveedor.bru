@@ -1,0 +1,33 @@
+meta {
+  name: Crear Proveedor
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/proveedores
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nombre": "Bruno proveedor {{testRunId}}"
+  }
+}
+
+script:post-response {
+  bru.setVar("providerId", res.getBody().id);
+}
+
+tests {
+  test("Crea un proveedor y devuelve su identificador", function() {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().id).to.be.a("number").and.greaterThan(0);
+    expect(res.getBody().nombre).to.equal("Bruno proveedor " + bru.getVar("testRunId"));
+  });
+}

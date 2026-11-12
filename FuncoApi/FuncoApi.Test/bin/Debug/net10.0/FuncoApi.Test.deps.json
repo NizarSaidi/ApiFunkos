@@ -854,6 +854,7 @@
           "CSharpFunctionalExtensions": "3.7.0",
           "MailKit": "5.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.15",
+          "Microsoft.EntityFrameworkCore.InMemory": "10.0.1",
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.1",
           "Microsoft.OpenApi": "3.11.0",
           "MongoDB.Driver": "3.13.0",

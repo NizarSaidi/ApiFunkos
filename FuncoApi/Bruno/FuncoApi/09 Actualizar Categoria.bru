@@ -1,0 +1,33 @@
+meta {
+  name: Actualizar Categoria
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{baseUrl}}/api/categorias/{{categoryId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nombre": "Bruno categoria actualizada {{testRunId}}"
+  }
+}
+
+tests {
+  test("Actualiza la categoría", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().id).to.equal(bru.getVar("categoryId"));
+    expect(res.getBody().nombre).to.equal("Bruno categoria actualizada " + bru.getVar("testRunId"));
+  });
+}

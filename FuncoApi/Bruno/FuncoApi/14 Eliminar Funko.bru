@@ -1,0 +1,22 @@
+meta {
+  name: Eliminar Funko
+  type: http
+  seq: 14
+}
+
+delete {
+  url: {{baseUrl}}/api/funcopops/{{funkoId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  test("Elimina el Funko creado", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().id).to.equal(bru.getVar("funkoId"));
+  });
+}

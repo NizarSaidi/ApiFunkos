@@ -1,0 +1,19 @@
+meta {
+  name: Leer Categoria
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/api/categorias/{{categoryId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Obtiene la categoría creada", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().id).to.equal(bru.getVar("categoryId"));
+    expect(res.getBody().nombre).to.equal("Bruno categoria " + bru.getVar("testRunId"));
+  });
+}

@@ -12,6 +12,7 @@
           "CSharpFunctionalExtensions": "3.7.0",
           "MailKit": "5.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.15",
+          "Microsoft.EntityFrameworkCore.InMemory": "10.0.1",
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.1",
           "Microsoft.OpenApi": "3.11.0",
           "MongoDB.Driver": "3.13.0",
@@ -215,6 +216,17 @@
       "Microsoft.EntityFrameworkCore.Abstractions/10.0.1": {
         "runtime": {
           "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
+            "assemblyVersion": "10.0.1.0",
+            "fileVersion": "10.0.125.57005"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.InMemory/10.0.1": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "10.0.1"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.InMemory.dll": {
             "assemblyVersion": "10.0.1.0",
             "fileVersion": "10.0.125.57005"
           }
@@ -587,6 +599,13 @@
       "sha512": "sha512-sp6Uq8Oc3RVGtmxLS3ZgzVeFHrpLNymsMudoeqRmB9pRTWgvq2S903sF5OnaaZmh4Bz6kpq7FwofE+DOhKJYvg==",
       "path": "microsoft.entityframeworkcore.abstractions/10.0.1",
       "hashPath": "microsoft.entityframeworkcore.abstractions.10.0.1.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.InMemory/10.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-f0HNO4Hp80AJLGkv/gV95q9yrPJ7CPfCjNq5trcLsXH75GurM/62D4m2YyXmkyQfeT4MRFXZSBPdhDBOx1CTQQ==",
+      "path": "microsoft.entityframeworkcore.inmemory/10.0.1",
+      "hashPath": "microsoft.entityframeworkcore.inmemory.10.0.1.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore.Relational/10.0.1": {
       "type": "package",

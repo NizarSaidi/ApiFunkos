@@ -8,6 +8,7 @@ namespace FuncoApi.Controlers;
 
 /// <summary>Expone las operaciones HTTP CRUD de proveedores.</summary>
 [ApiController]
+[Tags("Proveedores")]
 [Route("api/proveedores")]
 public class ProveedoresControler : ApiControllerBase
 {
